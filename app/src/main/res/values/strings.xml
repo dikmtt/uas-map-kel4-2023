@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">UAS_Kelompok 4</string>
+
+
+    <string name="Logo_area">Input Logo</string>
+    <string name="name_area">Input Name</string>
+    <string name="scan_qr_btn">Order Now (Scan QR)</string>
+    <string name="Lgn">Login</string>
+    <string name="Rgstr">Register</string>
+    <string name="Welcome_Text">Welcome</string>
 </resources>
