@@ -8,4 +8,6 @@
     <string name="Lgn">Login</string>
     <string name="Rgstr">Register</string>
     <string name="Welcome_Text">Welcome</string>
+    <string name="input_email">Enter Email:</string>
+    <string name="input_pass">Enter Password:</string>
 </resources>
