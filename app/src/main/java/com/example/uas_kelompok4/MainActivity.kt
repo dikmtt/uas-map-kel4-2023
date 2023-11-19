@@ -1,5 +1,6 @@
 package com.example.uas_kelompok4
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,11 +19,17 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -65,7 +72,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("login") {
 
-                            //Login
+                            LoginHome()
                         }
                         composable("register") {
 
@@ -83,6 +90,7 @@ class MainActivity : ComponentActivity() {
 //@Preview(showBackground = true)
 @Composable
 fun MainPage(navController: NavController) {
+    val cont = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -147,7 +155,7 @@ fun MainPage(navController: NavController) {
             }
 
             Button(
-                onClick = { navController.navigate("register") }
+                onClick = { cont.startActivity(Intent(cont, DashboardActivity::class.java)) }
             ) {
                 Text("Register")
             }
@@ -159,7 +167,8 @@ fun MainPage(navController: NavController) {
 fun Login(
     inputEmail: String,
     inputPass: String,
-    onInputValueChange: (String) -> Unit,
+    onEmailValueChange: (String) -> Unit,
+    onPassValueChange: (String) -> Unit,
     onButtonClick: () -> Unit
 ) {
     LazyColumn {
@@ -179,7 +188,7 @@ fun Login(
                 TextField(value = inputEmail,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
-                    ), onValueChange = onInputValueChange)
+                    ), onValueChange = onEmailValueChange)
                 Spacer(modifier = Modifier.height(20.dp))
                 Text(
                     text = stringResource(id = R.string.input_pass),
@@ -190,7 +199,7 @@ fun Login(
                 TextField(value = inputPass,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
-                    ), onValueChange = onInputValueChange)
+                    ), onValueChange = onPassValueChange)
                 Spacer(modifier = Modifier.height(20.dp))
                 Button(onClick = onButtonClick) {
                     Text(text = "Submit")
@@ -200,10 +209,23 @@ fun Login(
     }
 }
 
+@Composable
+fun LoginHome() {
+    var email by remember { mutableStateOf("") }
+    var pass by remember { mutableStateOf("") }
+    Login(
+        email,
+        pass,
+        onEmailValueChange = { email = it },
+        onPassValueChange = { pass = it },
+        onButtonClick = {}
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewLogin() {
-    Login("yo", "yo", {}, {})
+    Login("yo", "yo", {}, {}) {}
 }
 
 @Composable

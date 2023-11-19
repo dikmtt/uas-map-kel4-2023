@@ -58,12 +58,7 @@ class UserList: ComponentActivity() {
 }
 
 //Might make a separate class file for this
-data class User(
-    var name: String,
-    var email: String,
-    var password: String,
-    var role: String
-)
+
 
 @Composable
 fun ListPage() {
