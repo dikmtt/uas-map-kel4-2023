@@ -58,13 +58,13 @@ dependencies {
    // implementation("androidx.camera:camera-lifecycle:1.1.0-alpha03")
    // implementation("androidx.camera:camera-view:1.0.0-alpha31")
 
-    implementation("com.journeyapps:zxing-android-embedded::4.3.0")
-    implementation("com.google.zxing.core:3.4.1")
-    implementation("me.dm7.barcodescanner:zxing:1.9")
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
+    implementation("com.google.zxing:core:3.3.0")
+    implementation("me.dm7.barcodescanner:zxing:1.9.8")
 
-    implementation("androidx.core:core-ktx:1.9.0")
+    implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation("androidx.activity:activity-compose:1.8.0")
+    implementation("androidx.activity:activity-compose:1.8.1")
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
@@ -82,5 +82,15 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-    implementation("androidx.navigation:navigation-compose:2.7.4")
+    implementation("androidx.navigation:navigation-compose:2.7.5")
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            setUrl("https://jitpack.io")
+        }
+    }
 }

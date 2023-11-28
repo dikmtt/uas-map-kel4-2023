@@ -12,4 +12,6 @@
     <string name="input_pass">Enter Password:</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="scanbarcode">Scan Barcode</string>
+    <string name="error_msg">error</string>
 </resources>

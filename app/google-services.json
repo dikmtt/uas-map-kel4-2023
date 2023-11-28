@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "340328260726",
+    "project_id": "uas-map-kel4-2023",
+    "storage_bucket": "uas-map-kel4-2023.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:340328260726:android:cca3b5b3e9f302ffbf2b57",
+        "android_client_info": {
+          "package_name": "com.example.uas_kelompok4"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXBLzQNSICeuwH190rrivXg0hq8G1Te_w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,9 +1,13 @@
 package com.example.uas_kelompok4
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,6 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
 import com.example.uas_kelompok4.ui.theme.UAS_Kelompok4Theme
 
@@ -66,9 +71,8 @@ class MainActivity : ComponentActivity() {
                         composable("MainPage") {
                             MainPage(navController)
                         }
-                        composable("scanqr") {
-
-                            //scanqr()
+                        composable("qrscan") {
+                            QrScan(navController)
                         }
                         composable("login") {
 
@@ -143,7 +147,7 @@ fun MainPage(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Button(
-                onClick = { navController.navigate("scanqr") }
+                onClick = { navController.navigate("qrscan") }
             ) {
                 Text("Scan QR")
             }
@@ -222,6 +226,7 @@ fun LoginHome() {
     )
 }
 
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewLogin() {
@@ -231,4 +236,26 @@ fun PreviewLogin() {
 @Composable
 fun Image(painter: Any, contentDescription: Nothing?, modifier: Any) {
 
+}
+
+
+@Composable
+fun QrScan(navController: NavController) {
+    val context = LocalContext.current
+
+    val launchQRScan = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val scannedResult = result.data?.getStringExtra("SCAN_RESULT")
+            Toast.makeText(context, "Scanned result: $scannedResult", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    Button(
+        onClick = {
+            val intent = Intent(context, qrscan::class.java)
+            launchQRScan.launch(intent)
+        }
+    ) {
+        Text("Scan QR")
+    }
 }

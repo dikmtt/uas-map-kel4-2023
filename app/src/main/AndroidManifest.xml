@@ -25,6 +25,7 @@
         <activity
             android:name=".qrscan"
             android:screenOrientation="fullSensor"
+            android:theme="@style/Theme.AppCompat"
             tools:replace="android:screenOrientation"/>
         <activity
             android:name=".MainActivity"
