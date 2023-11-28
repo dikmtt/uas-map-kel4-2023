@@ -10,7 +10,11 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.example.uas_kelompok4.databinding.ActivityQrscanBinding
 import com.google.zxing.integration.android.IntentIntegrator
+import com.journeyapps.barcodescanner.ScanContract
+import com.journeyapps.barcodescanner.ScanIntentResult
+import com.journeyapps.barcodescanner.ScanOptions
 
 /*
 *  dari kemaren masalah di zxing
@@ -31,15 +35,33 @@ class qrscan : AppCompatActivity() {
             }
         }
 
+    private lateinit var binding : ActivityQrscanBinding
     private fun showCamera() {
-        IntentIntegrator(this)
-            .setOrientationLocked(false)
-            .setPrompt("Scan QR code")
-            .setCameraId(0)
-            .setBeepEnabled(false)
-            .initiateScan()
+        val options = ScanOptions()
+        options.setDesiredBarcodeFormats(ScanOptions.QR_CODE)
+        options.setPrompt("Scan QR code")
+        options.setCameraId(0)
+        options.setBeepEnabled(false)
+        options.setBarcodeImageEnabled(true)
+        options.setOrientationLocked(false)
+
+        scanLauncher.launch(options)
     }
 
+    private fun initBinding(){
+        binding = ActivityQrscanBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+    }
+    private val scanLauncher =
+        registerForActivityResult((ScanContract())){result: ScanIntentResult ->
+            run{
+                if(result.contents == null) {
+                    Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show()
+                }else{
+                    setResult(result.contents)
+                }
+            }
+        }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_qrscan)
