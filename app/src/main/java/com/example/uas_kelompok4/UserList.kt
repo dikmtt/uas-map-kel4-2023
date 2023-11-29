@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.uas_kelompok4.model.User
 import com.example.uas_kelompok4.ui.theme.Purple80
 import com.example.uas_kelompok4.ui.theme.UAS_Kelompok4Theme
 
@@ -63,12 +64,12 @@ class UserList: ComponentActivity() {
 @Composable
 fun ListPage() {
     val listData = remember { mutableStateListOf(
-        User("admin", "admin@resto.com", "admin", "Admin"),
-        User("Joe", "joe@mail.com", "abcdef", "Member"),
-        User("Bill", "bill@mail.com", "password", "Member"),
-        User("Steve", "steve@mail.com", "yeehaw", "Member"),
-        User("Ken", "ken@resto.com", "ooofff", "Staff"),
-        User("James", "james@resto.com", "admout", "Staff")
+        User("1", "admin", "admin@resto.com", "admin", "Admin"),
+        User("2","Joe", "joe@mail.com", "abcdef", "Member"),
+        User("3","Bill", "bill@mail.com", "password", "Member"),
+        User("4","Steve", "steve@mail.com", "yeehaw", "Member"),
+        User("5","Ken", "ken@resto.com", "ooofff", "Staff"),
+        User("6","James", "james@resto.com", "admout", "Staff")
     ) }
     ListContent(listData = listData)
 }
@@ -139,5 +140,5 @@ fun PreviewList() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewDetail() {
-    ListDetail(User("Joe", "joe@mail.com", "abcdef", "Member"))
+    ListDetail(User("1","Joe", "joe@mail.com", "abcdef", "Member"))
 }
