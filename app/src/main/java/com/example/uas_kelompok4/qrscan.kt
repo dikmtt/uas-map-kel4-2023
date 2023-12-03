@@ -16,14 +16,6 @@ import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanIntentResult
 import com.journeyapps.barcodescanner.ScanOptions
 
-/*
-*  dari kemaren masalah di zxing
-*  xml udah aku buat, tapi backend masih gagal selesai karena zxing
-*  ini aku udah ikutin tutorial zxing kotlin tapi masih error
-*
-* */
-
-
 class qrscan : AppCompatActivity() {
 
     private val requestPermissionLauncher =
@@ -70,7 +62,7 @@ class qrscan : AppCompatActivity() {
     }
 
     private fun initViews() {
-        findViewById<Button>(R.id.qrbutton).setOnClickListener {
+        findViewById<ImageButton>(R.id.qrbutton).setOnClickListener {
             checkPermissionCamera(this)
         }
     }
