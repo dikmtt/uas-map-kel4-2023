@@ -5,18 +5,17 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.example.uas_kelompok4.databinding.ActivityQrscanBinding
 import com.google.zxing.integration.android.IntentIntegrator
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanIntentResult
 import com.journeyapps.barcodescanner.ScanOptions
 
-class qrscan : AppCompatActivity() {
+class QrScan : AppCompatActivity() {
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
@@ -27,7 +26,6 @@ class qrscan : AppCompatActivity() {
             }
         }
 
-    private lateinit var binding : ActivityQrscanBinding
     private fun showCamera() {
         val options = ScanOptions()
         options.setDesiredBarcodeFormats(ScanOptions.QR_CODE)
@@ -40,10 +38,6 @@ class qrscan : AppCompatActivity() {
         scanLauncher.launch(options)
     }
 
-    private fun initBinding(){
-        binding = ActivityQrscanBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-    }
     private val scanLauncher =
         registerForActivityResult((ScanContract())){result: ScanIntentResult ->
             run{

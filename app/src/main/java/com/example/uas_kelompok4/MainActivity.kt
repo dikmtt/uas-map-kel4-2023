@@ -25,11 +25,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,7 +42,6 @@ import androidx.compose.ui.tooling.preview.Preview
 
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
 import com.example.uas_kelompok4.ui.theme.UAS_Kelompok4Theme
 
@@ -71,7 +69,7 @@ class MainActivity : ComponentActivity() {
                         composable("MainPage") {
                             MainPage(navController)
                         }
-                        composable("qrscan") {
+                        composable("QrScan") {
                             QrScan(navController)
                         }
                         composable("login") {
@@ -147,7 +145,7 @@ fun MainPage(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Button(
-                onClick = { navController.navigate("qrscan") }
+                onClick = { navController.navigate("QrScan") }
             ) {
                 Text("Scan QR")
             }
@@ -243,19 +241,20 @@ fun Image(painter: Any, contentDescription: Nothing?, modifier: Any) {
 fun QrScan(navController: NavController) {
     val context = LocalContext.current
 
-    val launchQRScan = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val scannedResult = result.data?.getStringExtra("SCAN_RESULT")
-            Toast.makeText(context, "Scanned result: $scannedResult", Toast.LENGTH_SHORT).show()
+    val launchQRScan =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val scannedResult = result.data?.getStringExtra("SCAN_RESULT")
+                Toast.makeText(context, "Scanned result: $scannedResult", Toast.LENGTH_SHORT).show()
+            }
         }
-    }
 
-    Button(
-        onClick = {
-            val intent = Intent(context, qrscan::class.java)
-            launchQRScan.launch(intent)
-        }
-    ) {
-        Text("Scan QR")
+    // Initiate QR scan when the composable is called (equivalent to a direct call)
+    LaunchedEffect(Unit) {
+        val intent = Intent(context, QrScan::class.java)
+        launchQRScan.launch(intent)
     }
 }
+
+
+
