@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddMenuActivity">
+    <TextView
+        android:id="@+id/addMenuTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Menu"
+        android:textSize="40dp"
+        android:layout_margin="20dp"
+        app:layout_constraintTop_toTopOf="parent"/>
+    <EditText
+        android:id="@+id/menu_name_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Menu Name"
+        android:padding="20dp"
+        android:layout_margin="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/addMenuTitle"/>
+    <EditText
+        android:id="@+id/price_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Price"
+        android:padding="20dp"
+        android:layout_margin="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/menu_name_et" />
+    <TextView
+        android:id="@+id/categoryName"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Category:"
+        android:textSize="25dp"
+        android:layout_margin="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/price_et"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+    <RadioGroup
+        android:id="@+id/radio_cat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/categoryName" >
+        <RadioButton
+            android:id="@+id/choose_appetizer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Appetizer" />
+        <RadioButton
+            android:id="@+id/choose_mc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Main Course" />
+        <RadioButton
+            android:id="@+id/choose_drink"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Beverage" />
+    </RadioGroup>
+    <TextView
+        android:id="@+id/imgHeader"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Image:"
+        android:textSize="25dp"
+        android:layout_margin="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/radio_cat"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+    <ImageView
+        android:id="@+id/menuImageSub"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_margin="20dp"
+        android:src="@drawable/ic_launcher_background"
+        app:layout_constraintTop_toBottomOf="@id/imgHeader"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+    <Button
+        android:id="@+id/addImgButton"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="Add Image"
+        android:layout_margin="20dp"
+        app:layout_constraintTop_toBottomOf="@id/menuImageSub"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+    <Button
+        android:id="@+id/submit_menu"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        app:layout_constraintTop_toBottomOf="@+id/addImgButton"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

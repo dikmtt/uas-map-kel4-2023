@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddPromoActivity">
+    <TextView
+        android:id="@+id/addPromoTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Promo"
+        android:textSize="40dp"
+        android:layout_margin="20dp"
+        app:layout_constraintTop_toTopOf="parent"/>
+    <EditText
+        android:id="@+id/promoName_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Promo Name"
+        android:padding="20dp"
+        android:layout_margin="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/addPromoTitle"/>
+    <EditText
+        android:id="@+id/discAmount_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Discount Amount (0-100)"
+        android:padding="20dp"
+        android:layout_margin="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/promoName_et"/>
+    <EditText
+        android:id="@+id/minPurchase_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Minimum Purchase (Enter 0 for universal promo)"
+        android:padding="20dp"
+        android:layout_margin="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/discAmount_et" />
+    <Button
+        android:id="@+id/submit_promo"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/minPurchase_et"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

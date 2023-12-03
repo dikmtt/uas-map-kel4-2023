@@ -1,29 +1,28 @@
 package com.example.uas_kelompok4
 
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.uas_kelompok4.model.MenuItem
 
 class OrderActivity : AppCompatActivity() {
-    private val menuRV: RecyclerView by lazy {
-        findViewById(R.id.menu_rv)
-    }
-    private val menuAdapter by lazy {
-        MenuItemAdapter(layoutInflater)
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_order)
 
-        menuRV.layoutManager = GridLayoutManager(this, 2)
-        menuRV.adapter = menuAdapter
+        val rvFrag = MenuFragment()
+        var currFrag = rvFrag
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.order_fragments, rvFrag)
+        ft.commit()
 
-        menuAdapter.setData(listOf(
-            MenuItem("1", "yee", "haw", 100, "yeet", 0),
-            MenuItem("2", "tee", "hee", 200, "yeet", 0),
-            MenuItem("3", "wee", "woo", 300, "yeet", 0)
-        ))
+        val btn = findViewById<Button>(R.id.order_to_review_btn)
+        /*btn.setOnClickListener {
+            if(currFrag is MenuFragment) {
+                //Transport to the review fragment
+                //Another code: when it's the review fragment, move to the confirmation screen
+            }
+        }*/
+
     }
+
 }

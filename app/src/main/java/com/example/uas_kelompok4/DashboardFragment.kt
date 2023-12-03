@@ -2,10 +2,11 @@ package com.example.uas_kelompok4
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import com.example.uas_kelompok4.model.User
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -16,7 +17,7 @@ class DashboardFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    //private val currUser: User = User("Ken", "ken@resto.com", "ooofff", "Staff")
+    var currUser: User = User("1","Ken", "ken@resto.com", "ooofff", "Staff")
     //User("admin", "admin@resto.com", "admin", "Admin")
     val showUsers = requireView().findViewById<View>(R.id.show_users)
     val addMenus = requireView().findViewById<View>(R.id.add_menu)
@@ -30,12 +31,16 @@ class DashboardFragment : Fragment() {
         }
     }
 
+    @Suppress("DEPRECATION")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dashboard, container, false)
+        val view = inflater.inflate(R.layout.fragment_dashboard, container, false)
+        val bund = arguments
+        currUser = bund?.getParcelable<User>("user")!!
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -49,6 +54,14 @@ class DashboardFragment : Fragment() {
         }
         showUsers.setOnClickListener {
             val i: Intent = Intent(activity, UserList::class.java)
+            startActivity(i)
+        }
+        addMenus.setOnClickListener {
+            val i: Intent = Intent(activity, AddMenuActivity::class.java)
+            startActivity(i)
+        }
+        addPromos.setOnClickListener {
+            val i: Intent = Intent(activity, AddPromoActivity::class.java)
             startActivity(i)
         }
     }

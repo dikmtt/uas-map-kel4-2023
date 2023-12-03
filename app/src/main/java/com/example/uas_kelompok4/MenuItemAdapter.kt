@@ -3,31 +3,39 @@ package com.example.uas_kelompok4
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.uas_kelompok4.model.MenuItem
+import com.google.firebase.database.DatabaseReference
 
-class MenuItemAdapter(private val layoutInflater: LayoutInflater)
+class MenuItemAdapter(private val layoutInflater: LayoutInflater,
+                      private val menuList: java.util.ArrayList<MenuItem>)
     : RecyclerView.Adapter<MenuItemAdapter.MenuViewHolder>() {
 
     private val menuItems = mutableListOf<MenuItem>()
-
-    fun setData(test: List<MenuItem>) {
-        menuItems.clear()
-        menuItems.addAll(test)
-        notifyDataSetChanged()
-    }
+    private lateinit var fbRef: DatabaseReference
 
     class MenuViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        private val itemName: TextView by lazy {
+        val itemName: TextView by lazy {
             itemView.findViewById(R.id.item_menu_name)
         }
-        private val itemImg: ImageView by lazy {
+        val itemImg: ImageView by lazy {
             itemView.findViewById(R.id.item_img)
         }
-        private val itemPrice: TextView by lazy {
+        val itemPrice: TextView by lazy {
             itemView.findViewById(R.id.item_price)
+        }
+        val addItem: Button by lazy {
+            itemView.findViewById(R.id.add_item)
+        }
+        val removeItem: Button by lazy {
+            itemView.findViewById(R.id.remove_item)
+        }
+        val counter: TextView by lazy {
+            itemView.findViewById(R.id.counter)
         }
 
         fun bind(menuItem: MenuItem) {
@@ -43,10 +51,32 @@ class MenuItemAdapter(private val layoutInflater: LayoutInflater)
     }
 
     override fun getItemCount(): Int {
-        return menuItems.size
+        return menuList.size
     }
 
     override fun onBindViewHolder(holder: MenuViewHolder, position: Int) {
-        holder.bind(menuItems[position])
+        val menuIt = menuList[position]
+        holder.itemName.text = menuIt.name
+        holder.itemPrice.text = menuIt.price.toString()
+        Glide.with(holder.itemImg)
+            .load(menuIt.imageUrl)
+            .into(holder.itemImg)
+        holder.counter.text = menuIt.boughtValue.toString()
+        holder.addItem.setOnClickListener {
+            val menuId = menuIt.id
+            var newValue = menuIt.boughtValue
+            newValue++
+            fbRef.child("menu").child(menuId).child("boughtvalue")
+                .setValue(newValue)
+            holder.counter.text = newValue.toString()
+        }
+        holder.removeItem.setOnClickListener {
+            val menuId = menuIt.id
+            var newValue = menuIt.boughtValue
+            newValue--
+            fbRef.child("menu").child(menuId).child("boughtvalue")
+                .setValue(newValue)
+            holder.counter.text = newValue.toString()
+        }
     }
 }

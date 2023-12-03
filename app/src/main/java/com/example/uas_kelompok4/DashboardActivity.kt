@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.uas_kelompok4.model.User
 
-public var currUser: User = User("1", "Ken", "ken@resto.com", "ooofff", "Staff")
+public var currUser: User = User("1", "Admin", "admin@resto.com", "ooofff", "Admin")
 //User("admin", "admin@resto.com", "admin", "Admin")
 class DashboardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -13,11 +13,17 @@ class DashboardActivity : AppCompatActivity() {
         val ft = supportFragmentManager.beginTransaction()
         if(currUser.role == "Member") {
             val dashb = CustomerDashboardFragment()
+            val bund = Bundle()
+            bund.putParcelable("user", currUser)
+            dashb.arguments = bund
             ft.replace(R.id.dashboard_segment, dashb)
             ft.commit()
         }
         else {
             val dashb = DashboardFragment()
+            val bund = Bundle()
+            bund.putParcelable("user", currUser)
+            dashb.arguments = bund
             ft.replace(R.id.dashboard_segment, dashb)
             ft.commit()
         }

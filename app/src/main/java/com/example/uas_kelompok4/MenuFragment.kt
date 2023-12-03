@@ -4,7 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
+import com.example.uas_kelompok4.databinding.FragmentMenuBinding
+import com.example.uas_kelompok4.model.MenuItem
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,6 +29,10 @@ class MenuFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private var _binding: FragmentMenuBinding? = null
+    private val binding get() = _binding!!
+    private lateinit var menuItemList: ArrayList<MenuItem>
+    private lateinit var fbRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +47,37 @@ class MenuFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_menu, container, false)
+        _binding = FragmentMenuBinding.inflate(inflater, container, false)
+        fbRef = FirebaseDatabase.getInstance().getReference("menu")
+        menuItemList = arrayListOf()
+
+        retrieveFromDB()
+
+        binding.menuRvFr.apply {
+            setHasFixedSize(true)
+            layoutManager = GridLayoutManager(this.context, 2)
+        }
+        return binding.root
+    }
+
+    private fun retrieveFromDB() {
+        fbRef.addValueEventListener(object :
+            ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                menuItemList.clear()
+                if(snapshot.exists()) {
+                    for(menuSnap in snapshot.children) {
+                        val menuIt = menuSnap.getValue(MenuItem::class.java)
+                        menuItemList.add(menuIt!!)
+                    }
+                }
+                val menuAdapter = MenuItemAdapter(layoutInflater, menuItemList)
+                binding.menuRvFr.adapter = menuAdapter
+            }
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(context, "Error: $error", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     companion object {

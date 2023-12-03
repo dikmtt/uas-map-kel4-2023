@@ -4,58 +4,75 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".DashboardFragment">
-    <LinearLayout
+    <GridLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center">
-        <LinearLayout
+        android:orientation="horizontal"
+        android:columnCount="2">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/show_users"
+            android:layout_width="165dp"
+            android:layout_height="150dp"
+            android:layout_margin="20dp"
+            android:background="@color/black" >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Show Users"
+                android:gravity="center" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_launcher_foreground" />
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/show_transactions"
+            android:layout_width="165dp"
+            android:layout_height="150dp"
+            android:layout_margin="20dp"
+            android:background="@color/cardview_dark_background" >
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="245dp"
-            android:orientation="horizontal">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/show_users"
-                android:layout_width="165dp"
-                android:layout_height="match_parent"
-                android:layout_margin="20dp"
-                android:background="@color/black" >
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Show Users"
-                    android:gravity="center" />
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_launcher_foreground" />
-            </androidx.cardview.widget.CardView>
-            <androidx.cardview.widget.CardView
-                android:id="@+id/show_transactions"
-                android:layout_width="165dp"
-                android:layout_height="match_parent"
-                android:layout_margin="20dp"
-                android:background="@color/cardview_dark_background" />
-        </LinearLayout>
-        <LinearLayout
+            android:layout_height="wrap_content"
+            android:text="Show Transactions"
+            android:gravity="center" />
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="245dp"
-            android:orientation="horizontal">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/add_menu"
-                android:layout_width="165dp"
-                android:layout_height="match_parent"
-                android:layout_margin="20dp"
-                android:background="@color/black"/>
-            <androidx.cardview.widget.CardView
-                android:id="@+id/add_promo"
-                android:layout_width="165dp"
-                android:layout_height="match_parent"
-                android:layout_margin="20dp"
-                android:background="@color/cardview_dark_background"/>
-        </LinearLayout>
-    </LinearLayout>
-
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_launcher_foreground" />
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/add_menu"
+            android:layout_width="165dp"
+            android:layout_height="150dp"
+            android:layout_margin="20dp"
+            android:background="@color/black">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Menu"
+            android:gravity="center" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_launcher_foreground" />
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/add_promo"
+            android:layout_width="165dp"
+            android:layout_height="150dp"
+            android:layout_margin="20dp"
+            android:background="@color/cardview_dark_background">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Promo"
+            android:gravity="center" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_launcher_foreground" />
+        </androidx.cardview.widget.CardView>
+    </GridLayout>
 
 </FrameLayout>
