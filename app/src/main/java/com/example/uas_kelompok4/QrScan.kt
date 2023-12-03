@@ -87,9 +87,8 @@ class QrScan : AppCompatActivity() {
     }
 
     private fun setResult(result: String) {
-       // link to next action after scan
+        // link to next action after scan
         Toast.makeText(this, "Scanned result: $result", Toast.LENGTH_SHORT).show()
     }
 }
-
 
