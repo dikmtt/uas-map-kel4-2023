@@ -3,6 +3,7 @@ package com.example.uas_kelompok4
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -11,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,8 +46,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.uas_kelompok4.ui.theme.UAS_Kelompok4Theme
+import com.google.android.gms.tasks.Task
+import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
-
+import com.google.firebase.database.database
 
 
 class MainActivity : ComponentActivity() {
@@ -84,6 +88,9 @@ class MainActivity : ComponentActivity() {
                         composable("AddMenu") {
                             // Create a composable or call AddMenuActivity here
                         }
+                        composable("MenuFragment") {
+                            // Your MenuFragment composable or associated logic
+                        }
 
                     }
                 }
@@ -108,6 +115,16 @@ fun MainPage(navController: NavController) {
     val goToAddMenuActivity: () -> Unit = {
         val intent = Intent(context, AddMenuActivity::class.java)
         startAddMenuActivity.launch(intent)
+    }
+    val goToMenuFragment: () -> Unit = {
+        navController.navigate("MenuFragment")
+    }
+
+    val database = Firebase.database("https://uas-kelompok-4-5e25b-default-rtdb.asia-southeast1.firebasedatabase.app/")
+    val myRef = database.getReference("message")
+    val testDatabase: () -> Unit = {
+        myRef.setValue("Hello, World!")
+        Log.d("test", "$myRef")
     }
     Column(
         modifier = Modifier
@@ -183,9 +200,21 @@ fun MainPage(navController: NavController) {
             ) {
                 Text("Go to Add Menu")
             }
+            Button(
+                onClick = goToMenuFragment // Navigate to MenuFragment when button is clicked
+            ) {
+                Text("Go to Menu Fragment")
+            }
+            Button(
+                onClick = testDatabase
+
+            ) {
+                Text("test database")
+            }
         }
     }
 }
+
 
 @Composable
 fun Login(

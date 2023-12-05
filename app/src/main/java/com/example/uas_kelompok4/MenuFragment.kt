@@ -1,6 +1,7 @@
 package com.example.uas_kelompok4
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,11 +10,13 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.uas_kelompok4.databinding.FragmentMenuBinding
 import com.example.uas_kelompok4.model.MenuItem
+import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.database
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -40,6 +43,7 @@ class MenuFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
     }
 
     override fun onCreateView(
@@ -48,7 +52,7 @@ class MenuFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentMenuBinding.inflate(inflater, container, false)
-        fbRef = FirebaseDatabase.getInstance().getReference("menu")
+        fbRef = FirebaseDatabase.getInstance("https://uas-kelompok-4-5e25b-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("menu")
         menuItemList = arrayListOf()
 
         retrieveFromDB()
