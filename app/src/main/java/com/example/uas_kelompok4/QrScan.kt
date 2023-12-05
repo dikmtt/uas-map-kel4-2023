@@ -43,16 +43,28 @@ class QrScan : AppCompatActivity() {
             run{
                 if(result.contents == null) {
                     Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show()
-                }else{
+                } else {
                     setResult(result.contents)
                 }
             }
         }
+
+    private fun setResult(result: String) {
+        if (result == "https://me-qr.com/riYpdt1j") {
+            val intent = Intent(this, OrderActivity::class.java)
+            startActivity(intent)
+            // Finish the current activity to prevent going back to the QR scan after navigating to OrderActivity
+            finish()
+        } else {
+            // Handle other scanned results if needed
+            Toast.makeText(this, "Scanned result: $result", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_qrscan)
         initViews()
-
     }
 
     private fun initViews() {
@@ -75,20 +87,12 @@ class QrScan : AppCompatActivity() {
         val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if (result != null) {
             if (result.contents == null) {
-
                 Toast.makeText(this, "Scan cancelled", Toast.LENGTH_SHORT).show()
             } else {
-
                 setResult(result.contents)
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
     }
-
-    private fun setResult(result: String) {
-        // link to next action after scan
-        Toast.makeText(this, "Scanned result: $result", Toast.LENGTH_SHORT).show()
-    }
 }
-
