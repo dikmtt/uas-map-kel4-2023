@@ -10,14 +10,23 @@
         android:id="@+id/order_fragments"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/order_to_review_btn"/>
+        app:layout_constraintBottom_toTopOf="@id/order_to_review_btn"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Button
         android:id="@+id/order_to_review_btn"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="Next Step"
-        app:layout_constraintTop_toBottomOf="@id/order_fragments"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/order_fragments" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="activity_order"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

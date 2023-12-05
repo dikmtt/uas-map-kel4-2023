@@ -44,11 +44,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.uas_kelompok4.ui.theme.UAS_Kelompok4Theme
+import com.google.firebase.FirebaseApp
+
 
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Firebase initialization
+        FirebaseApp.initializeApp(this)
+
         setContent {
             UAS_Kelompok4Theme {
 
@@ -76,6 +81,10 @@ class MainActivity : ComponentActivity() {
 
                             //Register()
                         }
+                        composable("AddMenu") {
+                            // Create a composable or call AddMenuActivity here
+                        }
+
                     }
                 }
             }
@@ -88,7 +97,18 @@ class MainActivity : ComponentActivity() {
 //@Preview(showBackground = true)
 @Composable
 fun MainPage(navController: NavController) {
-    val cont = LocalContext.current
+    val context  = LocalContext.current
+    val startAddMenuActivity = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // Handle the result if needed
+        }
+    }
+
+    // Function to start AddMenuActivity
+    val goToAddMenuActivity: () -> Unit = {
+        val intent = Intent(context, AddMenuActivity::class.java)
+        startAddMenuActivity.launch(intent)
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -153,9 +173,15 @@ fun MainPage(navController: NavController) {
             }
 
             Button(
-                onClick = { cont.startActivity(Intent(cont, DashboardActivity::class.java)) }
+                onClick = { context.startActivity(Intent(context , DashboardActivity::class.java)) }
             ) {
                 Text("Register")
+            }
+
+            Button(
+                onClick = goToAddMenuActivity // Navigate to AddMenuActivity when button is clicked
+            ) {
+                Text("Go to Add Menu")
             }
         }
     }
