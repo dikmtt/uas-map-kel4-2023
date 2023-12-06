@@ -10,7 +10,7 @@ class OrderActivity : AppCompatActivity() {
         setContentView(R.layout.activity_order)
 
         val rvFrag = MenuFragment()
-        var currFrag = rvFrag
+//        var currFrag = rvFrag
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.order_fragments, rvFrag)
         ft.commit()

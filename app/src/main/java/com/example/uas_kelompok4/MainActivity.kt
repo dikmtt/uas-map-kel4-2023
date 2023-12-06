@@ -113,6 +113,10 @@ fun MainPage(navController: NavController) {
         if (result.resultCode == Activity.RESULT_OK) {
         }
     }
+    val startOrderActivity = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+        }
+    }
 
     // Function to start AddMenuActivity
     val goToAddMenuActivity: () -> Unit = {
@@ -122,6 +126,10 @@ fun MainPage(navController: NavController) {
     val goToDashboardActivity: () -> Unit = {
         val intent = Intent(context, DashboardActivity::class.java)
         startDashboardActivity.launch(intent)
+    }
+    val goToOrderActivity: () -> Unit = {
+        val intent = Intent(context, OrderActivity::class.java)
+        startOrderActivity.launch(intent)
     }
     val goToMenuFragment: () -> Unit = {
         navController.navigate("MenuFragment")
@@ -217,6 +225,12 @@ fun MainPage(navController: NavController) {
 
             ) {
                 Text("Go to Dashboard Activity")
+            }
+            Button(
+                onClick = goToOrderActivity
+
+            ) {
+                Text("Go to Order Activity")
             }
             Button(
                 onClick = testDatabase
