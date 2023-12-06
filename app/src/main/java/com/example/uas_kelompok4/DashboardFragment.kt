@@ -19,9 +19,10 @@ class DashboardFragment : Fragment() {
     private var param2: String? = null
     var currUser: User = User("1","Ken", "ken@resto.com", "ooofff", "Staff")
     //User("admin", "admin@resto.com", "admin", "Admin")
-    val showUsers = requireView().findViewById<View>(R.id.show_users)
-    val addMenus = requireView().findViewById<View>(R.id.add_menu)
-    val addPromos = requireView().findViewById<View>(R.id.add_promo)
+    lateinit var showUsers: View
+    lateinit var addMenus: View
+    lateinit var addPromos: View
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +46,9 @@ class DashboardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        showUsers = requireView().findViewById<View>(R.id.show_users)
+        addMenus = requireView().findViewById<View>(R.id.add_menu)
+        addPromos = requireView().findViewById<View>(R.id.add_promo)
         if(currUser.role == "Admin") {
             addMenus.visibility = View.VISIBLE
             addPromos.visibility = View.VISIBLE
