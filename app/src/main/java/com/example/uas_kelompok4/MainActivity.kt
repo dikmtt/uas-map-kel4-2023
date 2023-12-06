@@ -107,7 +107,10 @@ fun MainPage(navController: NavController) {
     val context  = LocalContext.current
     val startAddMenuActivity = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            // Handle the result if needed
+        }
+    }
+    val startDashboardActivity = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
         }
     }
 
@@ -115,6 +118,10 @@ fun MainPage(navController: NavController) {
     val goToAddMenuActivity: () -> Unit = {
         val intent = Intent(context, AddMenuActivity::class.java)
         startAddMenuActivity.launch(intent)
+    }
+    val goToDashboardActivity: () -> Unit = {
+        val intent = Intent(context, DashboardActivity::class.java)
+        startDashboardActivity.launch(intent)
     }
     val goToMenuFragment: () -> Unit = {
         navController.navigate("MenuFragment")
@@ -204,6 +211,12 @@ fun MainPage(navController: NavController) {
                 onClick = goToMenuFragment // Navigate to MenuFragment when button is clicked
             ) {
                 Text("Go to Menu Fragment")
+            }
+            Button(
+                onClick = goToDashboardActivity
+
+            ) {
+                Text("Go to Dashboard Activity")
             }
             Button(
                 onClick = testDatabase
