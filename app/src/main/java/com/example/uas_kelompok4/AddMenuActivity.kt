@@ -94,6 +94,7 @@ class AddMenuActivity : AppCompatActivity() {
 
                             fbRef.child(foodId).setValue(menuItem).addOnCompleteListener {
                                 Toast.makeText(this, "New menu item successfully added", Toast.LENGTH_LONG).show()
+                                finish()
                             }
                                 .addOnFailureListener {
                                     Toast.makeText(this, "Error: ${it.message}", Toast.LENGTH_LONG).show()

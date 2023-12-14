@@ -204,22 +204,22 @@ fun MainPage(navController: NavController) {
                 Text("Login")
             }
 
-            Button(
-                onClick = { context.startActivity(Intent(context , DashboardActivity::class.java)) }
-            ) {
-                Text("Register")
-            }
+//            Button(
+//                onClick = { context.startActivity(Intent(context , DashboardActivity::class.java)) }
+//            ) {
+//                Text("Register")
+//            }
 
             Button(
                 onClick = goToAddMenuActivity // Navigate to AddMenuActivity when button is clicked
             ) {
                 Text("Go to Add Menu")
             }
-            Button(
-                onClick = goToMenuFragment // Navigate to MenuFragment when button is clicked
-            ) {
-                Text("Go to Menu Fragment")
-            }
+//            Button(
+//                onClick = goToMenuFragment // Navigate to MenuFragment when button is clicked
+//            ) {
+//                Text("Go to Menu Fragment")
+//            }
             Button(
                 onClick = goToDashboardActivity
 
@@ -232,12 +232,12 @@ fun MainPage(navController: NavController) {
             ) {
                 Text("Go to Order Activity")
             }
-            Button(
-                onClick = testDatabase
-
-            ) {
-                Text("test database")
-            }
+//            Button(
+//                onClick = testDatabase
+//
+//            ) {
+//                Text("test database")
+//            }
         }
     }
 }

@@ -6,11 +6,12 @@ package com.example.uas_kelompok4.model
 //Sebuah transaksi bisa memiliki promo, final price transaksi adalah harga setelah promo
 //Tanpa promo, final price sama dengan harga di kolom total
 data class Transaction(
-    var id: String,
     var date: String,
     var time: String,
-    var total: Int,
-    var promoId: String?,
-    var finalPrice: Int,
+    var transactionItems: List<MenuItem>,
+    var totalItems: Int,
+    var promoId: String,
+    var totalPrice: Int,
     var userId: String
+
 )

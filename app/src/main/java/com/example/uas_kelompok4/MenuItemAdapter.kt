@@ -1,5 +1,6 @@
 package com.example.uas_kelompok4
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,15 +10,21 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.uas_kelompok4.model.MenuItem
-import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
-class MenuItemAdapter(private val layoutInflater: LayoutInflater,
-                      private val menuList: java.util.ArrayList<MenuItem>)
-    : RecyclerView.Adapter<MenuItemAdapter.MenuViewHolder>() {
+class MenuItemAdapter(
+    private val layoutInflater: LayoutInflater,
+    private val menuList: ArrayList<MenuItem>,
+    private val orderedMenu: MutableList<MenuItem>, // Add orderedMenu as a parameter
+    private val listener: OnItemChangedListener
+) : RecyclerView.Adapter<MenuItemAdapter.MenuViewHolder>() {
 
     private val menuItems = mutableListOf<MenuItem>()
-    private lateinit var fbRef: DatabaseReference
+    private val fbRef = FirebaseDatabase.getInstance("https://uas-kelompok-4-5e25b-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("menu")
 
+    interface OnItemChangedListener {
+        fun onItemChanged(menuItem: MenuItem)
+    }
     class MenuViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val itemName: TextView by lazy {
             itemView.findViewById(R.id.item_menu_name)
@@ -56,27 +63,42 @@ class MenuItemAdapter(private val layoutInflater: LayoutInflater,
 
     override fun onBindViewHolder(holder: MenuViewHolder, position: Int) {
         val menuIt = menuList[position]
+
         holder.itemName.text = menuIt.name
         holder.itemPrice.text = menuIt.price.toString()
         Glide.with(holder.itemImg)
             .load(menuIt.imageUrl)
             .into(holder.itemImg)
-        holder.counter.text = menuIt.boughtValue.toString()
+
+        val orderedMenuItem = orderedMenu.find { it.id == menuIt.id }
+
+        val boughtValue = orderedMenuItem?.boughtValue ?: 0
+        holder.counter.text = boughtValue.toString()
+
         holder.addItem.setOnClickListener {
-            val menuId = menuIt.id
-            var newValue = menuIt.boughtValue
-            newValue++
-            fbRef.child("menu").child(menuId).child("boughtvalue")
-                .setValue(newValue)
-            holder.counter.text = newValue.toString()
+            val foundMenuItem =
+                orderedMenuItem ?: menuIt // Use the ordered item or the current item
+            foundMenuItem.boughtValue++
+            holder.counter.text = foundMenuItem.boughtValue.toString()
+            listener.onItemChanged(foundMenuItem)
         }
+
         holder.removeItem.setOnClickListener {
-            val menuId = menuIt.id
-            var newValue = menuIt.boughtValue
-            newValue--
-            fbRef.child("menu").child(menuId).child("boughtvalue")
-                .setValue(newValue)
-            holder.counter.text = newValue.toString()
+            val foundMenuItem =
+                orderedMenuItem ?: menuIt
+
+            if (foundMenuItem.boughtValue > 0) {
+                foundMenuItem.boughtValue--
+                holder.counter.text = foundMenuItem.boughtValue.toString()
+                listener.onItemChanged(foundMenuItem)
+            }
         }
     }
+
+//    fun setOrderItemClickListener(listener: MenuFragment.OrderItemClickListener?) {
+//        orderItemClickListener = listener
+//        menuItemAdapter = MenuItemAdapter(layoutInflater, menuItemList, orderedMenu, orderItemClickListener)
+//        binding.menuRvFr.adapter = menuItemAdapter
+//    }
+
 }

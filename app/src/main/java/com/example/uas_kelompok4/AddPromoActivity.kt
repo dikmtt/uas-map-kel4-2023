@@ -36,5 +36,7 @@ class AddPromoActivity : AppCompatActivity() {
         val promoId = fbRef.push().key!!
         val promo = Promo(promoId, name, discAmountDb, minPrice)
         fbRef.child(promoId).setValue(promo)
+        Toast.makeText(this, "New promo successfully added", Toast.LENGTH_LONG).show()
+        finish()
     }
 }

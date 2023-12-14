@@ -40,6 +40,7 @@ android {
     buildFeatures {
         compose = true
         viewBinding = true
+        //noinspection DataBindingWithoutKapt
         dataBinding = true
     }
     composeOptions {
@@ -79,6 +80,7 @@ dependencies {
     implementation("com.google.firebase:firebase-storage:20.3.0")
     implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
     implementation("com.google.firebase:firebase-auth-ktx:22.3.0")
+    implementation("androidx.recyclerview:recyclerview:1.3.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
