@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.uas_kelompok4.databinding.ActivityAddMenuBinding
 import com.example.uas_kelompok4.model.MenuItem
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
@@ -19,7 +20,6 @@ class AddMenuActivity : AppCompatActivity() {
     private lateinit var fbRef: DatabaseReference
     private lateinit var stRef: StorageReference
     private var uri:Uri? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,28 +44,6 @@ class AddMenuActivity : AppCompatActivity() {
         binding.addImgButton.setOnClickListener {
             takeImgRes.launch("image/*")
         }
-//        // Check if a user is signed in (for example, in your Activity or Fragment)
-//        val mAuth = FirebaseAuth.getInstance()
-//        val currentUser = mAuth.currentUser
-//
-//// If no user is signed in, initiate the sign-in process
-//        if (currentUser == null) {
-//            // Implement your sign-in logic here (e.g., using email/password authentication, Google Sign-In, etc.)
-//            // ...
-//        } else {
-//            // User is already signed in, you can get the Firebase token here
-//            mAuth.currentUser?.getIdToken(true)
-//                ?.addOnCompleteListener { task ->
-//                    if (task.isSuccessful) {
-//                        val token = task.result?.token
-//                        Log.d("token", "$token") // Correctly logs the token value
-//                        // Use the token as needed
-//                    } else {
-//                        // Handle token retrieval failure
-//                    }
-//                }
-//        }
-
     }
     private fun saveData() {
         val name = binding.menuNameEt.text.toString()
@@ -103,4 +81,6 @@ class AddMenuActivity : AppCompatActivity() {
                 }
         }
     }
+
+
 }

@@ -78,10 +78,6 @@ class MenuFragment : Fragment() ,MenuItemAdapter.OnItemChangedListener {
         Log.d("MenuFragment", "Total Items: $totalItem, Total Price: $totalPrice")
     }
 
-
-    fun getMenuItemList(): List<MenuItem> {
-        return menuItemList
-    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -128,7 +124,6 @@ class MenuFragment : Fragment() ,MenuItemAdapter.OnItemChangedListener {
                 Toast.makeText(context, "Error: $error", Toast.LENGTH_SHORT).show()
             }
         })
-
     }
     fun processOrder() {
         val orders = mutableListOf<MenuItem>()

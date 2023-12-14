@@ -35,6 +35,11 @@
             android:exported="true"
             android:theme="@style/Theme.AppCompat"/>
         <activity
+            android:name=".UpdateMenusActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat"/>
+
+        <activity
             android:name=".QrScan"
             android:screenOrientation="fullSensor"
             android:theme="@style/Theme.AppCompat"

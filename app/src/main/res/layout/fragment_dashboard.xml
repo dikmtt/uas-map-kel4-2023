@@ -73,6 +73,22 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_launcher_foreground" />
         </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/update_menu"
+            android:layout_width="165dp"
+            android:layout_height="150dp"
+            android:layout_margin="20dp"
+            android:background="@color/cardview_dark_background">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Update Menu"
+                android:gravity="center" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_launcher_foreground" />
+        </androidx.cardview.widget.CardView>
     </GridLayout>
 
 </FrameLayout>

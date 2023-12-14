@@ -1,5 +1,6 @@
 package com.example.uas_kelompok4
 
+import com.example.uas_kelompok4.UpdateMenusActivity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -22,6 +23,7 @@ class DashboardFragment : Fragment() {
     lateinit var showUsers: View
     lateinit var addMenus: View
     lateinit var addPromos: View
+    lateinit var updateMenus: View
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +51,7 @@ class DashboardFragment : Fragment() {
         showUsers = requireView().findViewById<View>(R.id.show_users)
         addMenus = requireView().findViewById<View>(R.id.add_menu)
         addPromos = requireView().findViewById<View>(R.id.add_promo)
+        updateMenus = requireView().findViewById<View>(R.id.update_menu)
         if(currUser.role == "Admin") {
             addMenus.visibility = View.VISIBLE
             addPromos.visibility = View.VISIBLE
@@ -66,6 +69,10 @@ class DashboardFragment : Fragment() {
         }
         addPromos.setOnClickListener {
             val i: Intent = Intent(activity, AddPromoActivity::class.java)
+            startActivity(i)
+        }
+        updateMenus.setOnClickListener {
+            val i: Intent = Intent(activity, UpdateMenusActivity::class.java)
             startActivity(i)
         }
     }

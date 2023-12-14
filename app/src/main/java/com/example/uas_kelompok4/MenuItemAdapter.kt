@@ -22,6 +22,7 @@ class MenuItemAdapter(
     private val menuItems = mutableListOf<MenuItem>()
     private val fbRef = FirebaseDatabase.getInstance("https://uas-kelompok-4-5e25b-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("menu")
 
+
     interface OnItemChangedListener {
         fun onItemChanged(menuItem: MenuItem)
     }
