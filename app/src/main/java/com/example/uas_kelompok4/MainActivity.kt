@@ -21,7 +21,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -33,6 +39,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -192,23 +199,35 @@ fun MainPage(navController: NavController) {
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Button(
-                onClick = { navController.navigate("QrScan") }
+           OutlinedButton(
+                onClick = { navController.navigate("QrScan") },
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
             ) {
+                Icon(Icons.Default.ShoppingCart, contentDescription = null, tint = Color.Unspecified)
                 Text("Scan QR")
             }
 
-            Button(
-                onClick = { navController.navigate("login") }
+            OutlinedButton(
+                onClick = { navController.navigate("login") },
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
             ) {
+                Icon(Icons.Default.Lock, contentDescription = null, tint = Color.Unspecified)
                 Text("Login")
             }
 
-//            Button(
-//                onClick = { context.startActivity(Intent(context , DashboardActivity::class.java)) }
-//            ) {
-//                Text("Register")
-//            }
+/*           OutlinedButton(
+               onClick = { context.startActivity(Intent(context, DashboardActivity::class.java)) },
+                modifier = Modifier
+                    .padding(8.dp)
+                   .fillMaxWidth()
+           ) {
+               Icon(Icons.Default.Add, contentDescription = null, tint = Color.Unspecified)
+                Text("Register")
+          }*/
 
             Button(
                 onClick = goToAddMenuActivity // Navigate to AddMenuActivity when button is clicked
@@ -281,7 +300,13 @@ fun Login(
                         keyboardType = KeyboardType.Text
                     ), onValueChange = onPassValueChange)
                 Spacer(modifier = Modifier.height(20.dp))
-                Button(onClick = onButtonClick) {
+                
+                OutlinedButton(
+                    onClick = { onButtonClick },
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth()
+                )  {
                     Text(text = "Submit")
                 }
             }
