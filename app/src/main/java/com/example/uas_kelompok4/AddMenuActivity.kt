@@ -36,9 +36,18 @@ class AddMenuActivity : AppCompatActivity() {
             saveData()
         }
         val takeImgRes = registerForActivityResult(ActivityResultContracts.GetContent()) {
-            binding.menuImageSub.setImageURI(it)
-            if(it != null) {
-                uri = it
+            if (it != null) {
+                val fileSizeInBytes = contentResolver.openInputStream(it)?.available() ?: 0
+                val fileSizeInMB = fileSizeInBytes / (1024.0 * 1024.0)
+
+                val maxSizeInMB = 5.0
+
+                if (fileSizeInMB > maxSizeInMB) {
+                    Toast.makeText(this, "Image can't be more than $maxSizeInMB MB", Toast.LENGTH_LONG).show()
+                } else {
+                    binding.menuImageSub.setImageURI(it)
+                    uri = it
+                }
             }
         }
         binding.addImgButton.setOnClickListener {
