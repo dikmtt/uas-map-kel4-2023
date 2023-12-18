@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.uas_kelompok4.databinding.FragmentMenuBinding
 import com.example.uas_kelompok4.databinding.FragmentUpdatedeletemenuBinding
 import com.example.uas_kelompok4.model.MenuItem
 import com.google.firebase.database.DataSnapshot
@@ -20,7 +19,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class UpdateDeleteMenuFragment : Fragment() , UpdateMenuItemAdapter.OnItemChangedListener {
+class UpdateDeleteMenuFragment : Fragment() , UpdateMenuItemAdapter.OnUpdateMenuItemListener  {
     private var _binding: FragmentUpdatedeletemenuBinding? = null
     private val binding get() = _binding!!
     private var menuItemList = ArrayList<MenuItem>()
@@ -36,7 +35,7 @@ class UpdateDeleteMenuFragment : Fragment() , UpdateMenuItemAdapter.OnItemChange
         }
     }
 
-    override fun onItemChanged(menuItem: MenuItem) {
+    fun onItemChanged(menuItem: MenuItem) {
         // Update the list of ordered items when the quantity changes
         val existingItem = orderedMenu.find { it.id == menuItem.id }
 
@@ -178,4 +177,19 @@ class UpdateDeleteMenuFragment : Fragment() , UpdateMenuItemAdapter.OnItemChange
         fun onOrderItemsSelected(orderedMenu: List<MenuItem>)
     }
 
+    override fun onUpdateMenuItem(menuItem: MenuItem) {
+        val menuId = menuItem.id // Assuming 'id' is the unique identifier of your MenuItem
+        val menuRef = fbRef.child(menuId)
+
+        // Update the specific menu item in the Firebase Realtime Database
+        menuRef.setValue(menuItem)
+            .addOnSuccessListener {
+                // Handle successful update
+                // For example, show a success message or perform any post-update actions
+            }
+            .addOnFailureListener { e ->
+                // Handle failed update
+                // For example, show an error message or log the error
+            }
+    }
 }

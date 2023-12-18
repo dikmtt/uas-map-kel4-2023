@@ -1,11 +1,13 @@
 package com.example.uas_kelompok4
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.uas_kelompok4.databinding.FragmentMenuBinding
@@ -166,6 +168,7 @@ class MenuFragment : Fragment() ,MenuItemAdapter.OnItemChangedListener {
                     .addOnSuccessListener {
                         // Handle success
                         Log.d("Firebase", "Transaction added successfully")
+                        showSuccessDialog()
                     }
                     .addOnFailureListener {
                         // Handle failure
@@ -174,11 +177,43 @@ class MenuFragment : Fragment() ,MenuItemAdapter.OnItemChangedListener {
             }
         } else {
             Log.d("MenuFragment", "No items to process/order")
+            showNoItemsDialog()
         }
     }
 
 
 
+    // Inside your Fragment or Activity class
+
+    private fun showSuccessDialog() {
+        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+        alertDialogBuilder.setTitle("Success")
+        alertDialogBuilder.setMessage("Transaction added successfully!")
+
+        alertDialogBuilder.setPositiveButton("OK") { _, _ ->
+            // Navigate back to the main menu or perform any necessary action
+            // Replace 'MainActivity' with your main menu activity
+            val intent = Intent(requireContext(), MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+            requireActivity().finish()
+        }
+
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
+    private fun showNoItemsDialog() {
+        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+        alertDialogBuilder.setTitle("No Items to Order")
+        alertDialogBuilder.setMessage("There are no items in your order list.")
+
+        alertDialogBuilder.setPositiveButton("OK") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
 
     companion object {
         /**
