@@ -3,7 +3,6 @@
 package com.example.uas_kelompok4
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -15,23 +14,19 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
@@ -48,15 +43,10 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -65,11 +55,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.uas_kelompok4.ui.theme.UAS_Kelompok4Theme
-import com.google.android.gms.tasks.Task
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.database
 
@@ -100,7 +88,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("login") {
 
-                            LoginHome()
+                            LoginHome(navController)
                         }
                         composable("register") {
 
@@ -293,8 +281,9 @@ fun Login(
     inputPass: String,
     onEmailValueChange: (String) -> Unit,
     onPassValueChange: (String) -> Unit,
-    onButtonClick: () -> Unit
-) {
+    onButtonClick: () -> Unit,
+    navController: NavController
+){
     LazyColumn {
         item {
             Column(
@@ -334,9 +323,7 @@ fun Login(
 
                 OutlinedButton(
                     onClick = {
-
-                        authenticateUser(inputEmail, inputPass)
-
+                        authenticateUser(inputEmail, inputPass, navController)
                         onButtonClick()
                     },
                     modifier = Modifier
@@ -350,19 +337,68 @@ fun Login(
     }
 }
 
-private fun authenticateUser(email: String, password: String) {
+private fun authenticateUser(email: String, password: String, navController: NavController) {
     FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val user = task.result?.user
+                getUserRole(navController, user?.uid)
             } else {
                 val exception = task.exception
             }
         }
 }
 
+private fun getUserRole(navController: NavController, userId: String?) {
+    val database = FirebaseDatabase.getInstance()
+    val rolesRef = database.getReference("roles")
+
+    userId?.let {
+        rolesRef.child(it).get()
+            .addOnSuccessListener { dataSnapshot ->
+                val role = dataSnapshot.getValue(String::class.java)
+                // Redirect based on user role
+                navigateBasedOnRole(navController, role)
+            }
+            .addOnFailureListener {
+                // Handle failure to retrieve user role
+            }
+    }
+}
+
+private fun navigateBasedOnRole(navController: NavController, role: String?) {
+    when (role) {
+        "member" -> {
+            startActivityForMember(navController)
+        }
+        "staff" -> {
+            // Add code for staff navigation
+        }
+        "admin" -> {
+            // Add code for admin navigation
+        }
+        else -> {
+            Toast.makeText(navController.context, "Must be a member...", Toast.LENGTH_SHORT).show()
+        }
+    }
+}
+
+private fun startActivityForMember(navController: NavController) {
+    navController.navigate("MainPage")
+}
+
+private fun startActivityForStaff() {
+  //  val intent = Intent(context, StaffActivity::class.java)
+  //  startActivity(intent)
+}
+
+private fun startActivityForAdmin() {
+ //   val intent = Intent(context, AdminActivity::class.java)
+ //  startActivity(intent)
+}
+
 @Composable
-fun LoginHome() {
+fun LoginHome(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var pass by remember { mutableStateOf("") }
     Login(
@@ -370,16 +406,17 @@ fun LoginHome() {
         pass,
         onEmailValueChange = { email = it },
         onPassValueChange = { pass = it },
-        onButtonClick = {}
+        onButtonClick = { authenticateUser(email, pass, navController) },
+        navController = navController
     )
 }
 
 
-@Preview(showBackground = true)
+/*@Preview(showBackground = true)
 @Composable
 fun PreviewLogin() {
-    Login("yo", "yo", {}, {}) {}
-}
+    Login("yo", "yo", {}, {}, {} )
+}*/
 
 @Composable
 fun Image(painter: Any, contentDescription: Nothing?, modifier: Any) {
