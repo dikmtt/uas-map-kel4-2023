@@ -6,7 +6,7 @@ import com.example.uas_kelompok4.R
 import com.example.uas_kelompok4.model.MenuItem
 import com.google.firebase.database.*
 
-class UpdateMenusActivity : AppCompatActivity(){
+class UpdateMenusActivity : AppCompatActivity() , UpdateMenuItemAdapter.OnUpdateMenuItemListener {
     private val fbRef = FirebaseDatabase.getInstance("https://uas-kelompok-4-5e25b-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("menu")
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +26,7 @@ class UpdateMenusActivity : AppCompatActivity(){
                 .commit()
         }
     }
-    fun retrieveMenuItems(callback: (List<MenuItem>) -> Unit) {
+    private fun retrieveMenuItems(callback: (List<MenuItem>) -> Unit) {
         fbRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val menuItems = mutableListOf<MenuItem>()
@@ -58,5 +58,21 @@ class UpdateMenusActivity : AppCompatActivity(){
             println("ID: ${menuItem.id}, Name: ${menuItem.name}, Price: ${menuItem.price}")
             // Add your logic here to use or display the menu items retrieved
         }
+    }
+
+    override fun onUpdateMenuItem(menuItem: MenuItem) {
+        val menuId = menuItem.id // Assuming 'id' is the unique identifier of your MenuItem
+        val menuRef = fbRef.child(menuId)
+
+        // Update the specific menu item in the Firebase Realtime Database
+        menuRef.setValue(menuItem)
+            .addOnSuccessListener {
+                // Handle successful update
+                // For example, show a success message or perform any post-update actions
+            }
+            .addOnFailureListener { e ->
+                // Handle failed update
+                // For example, show an error message or log the error
+            }
     }
 }
