@@ -48,7 +48,7 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun registerUser(email: String, password: String, name: String) {
+    private fun registerUser(name: String, email: String, password: String) {
 
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
@@ -83,7 +83,7 @@ class RegisterActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please enter your E-Mail!", Toast.LENGTH_SHORT).show()
             }
             if (password.length >= 6) {
-                Toast.makeText(this, "Password Must 6 ot more character!", Toast.LENGTH_SHORT)
+                Toast.makeText(this, "Password Must 6 or more character!", Toast.LENGTH_SHORT)
                     .show()
             }
             return
