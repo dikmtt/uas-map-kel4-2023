@@ -375,7 +375,7 @@ private fun navigateBasedOnRole(navController: NavController, role: String?) {
             // Add code for staff navigation
         }
         "admin" -> {
-            // Add code for admin navigation
+            startActivityForAdmin(navController)
         }
         else -> {
             Toast.makeText(navController.context, "Must be a member...", Toast.LENGTH_SHORT).show()
@@ -387,14 +387,12 @@ private fun startActivityForMember(navController: NavController) {
     navController.navigate("MainPage")
 }
 
-private fun startActivityForStaff() {
-  //  val intent = Intent(context, StaffActivity::class.java)
-  //  startActivity(intent)
+private fun startActivityForStaff(navController: NavController) {
+  //  navController.navigate("")
 }
 
-private fun startActivityForAdmin() {
- //   val intent = Intent(context, AdminActivity::class.java)
- //  startActivity(intent)
+private fun startActivityForAdmin(navController: NavController) {
+    navController.navigate("DashboardActivity")
 }
 
 @Composable
