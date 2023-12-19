@@ -49,22 +49,21 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun registerUser(name: String, email: String, password: String) {
+        val userId = fbRef.push().key ?: ""
 
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
+        val user = mapOf(
+            "userId" to userId,
+            "name" to name,
+            "email" to email,
+            "password" to password
+        )
+
+        fbRef.child(userId).setValue(user)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val userId = firebaseAuth.currentUser?.uid ?: ""
-                    val user = mapOf(
-                        "name" to name,
-                        "email" to email,
-                        "password" to password
-                    )
-                    fbRef.child(userId).setValue(user)
-
                     Toast.makeText(this, "Registration Successful", Toast.LENGTH_SHORT).show()
                     finish()
                 } else {
-
                     Toast.makeText(this, "Registration failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -75,7 +74,7 @@ class RegisterActivity : AppCompatActivity() {
         val email = binding.editTextEmail.text.toString()
         var password = binding.editTextPassword.text.toString()
 
-        if (name.isEmpty() || email.isEmpty() || password.length <= 6) {
+        if (name.isEmpty() || email.isEmpty() || password.length < 6) {
             if (name.isEmpty()) {
                 Toast.makeText(this, "Please enter your name!", Toast.LENGTH_SHORT).show()
             }
