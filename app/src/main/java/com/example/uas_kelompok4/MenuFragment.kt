@@ -147,8 +147,14 @@ class MenuFragment : Fragment() ,MenuItemAdapter.OnItemChangedListener {
             totalPrice += selectedItem.price * selectedItem.boughtValue
             totalItem += selectedItem.boughtValue
         }
+        val ordersAL: ArrayList<MenuItem> = orders as ArrayList<MenuItem>
+        //Put these objects to the ConfirmOrderFragments
+        val coFrag = ConfirmOrderFragment.newInstance(totalItem, totalPrice, ordersAL)
+        val ft = activity?.supportFragmentManager?.beginTransaction()
+        ft?.replace(R.id.order_fragments, coFrag)
+        ft?.commit()
 
-        if (orderedMenu.isNotEmpty()) {
+        /*if (orderedMenu.isNotEmpty()) {
             val transactionMap = HashMap<String, Any>()
             transactionMap["date"] = currentDate
             transactionMap["time"] = currentTime
@@ -178,7 +184,7 @@ class MenuFragment : Fragment() ,MenuItemAdapter.OnItemChangedListener {
         } else {
             Log.d("MenuFragment", "No items to process/order")
             showNoItemsDialog()
-        }
+        }*/
     }
 
 

@@ -4,16 +4,23 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.example.uas_kelompok4.model.MenuItem
 
 class OrderActivity : AppCompatActivity(), MenuFragment.OrderItemClickListener {
     private lateinit var rvFrag: MenuFragment
+    private lateinit var coFrag: ConfirmOrderFragment
+    private lateinit var currFrag: Fragment
+    private var isInMenu: Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_order)
 
         rvFrag = MenuFragment.newInstance("param1", "param2")
+        coFrag = ConfirmOrderFragment()
+        currFrag = rvFrag
+        isInMenu = 1
 
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.order_fragments, rvFrag)
@@ -23,7 +30,13 @@ class OrderActivity : AppCompatActivity(), MenuFragment.OrderItemClickListener {
 
         val btn = findViewById<Button>(R.id.order_to_review_btn)
         btn.setOnClickListener {
-            rvFrag.processOrder() // Trigger the order processing logic on button click
+            if(isInMenu == 1) {
+                rvFrag.processOrder() // Trigger the order processing logic on button click
+                currFrag = coFrag
+                isInMenu = 0
+            } else {
+                coFrag.clickButton()
+            }
         }
     }
 

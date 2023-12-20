@@ -1,12 +1,9 @@
 package com.example.uas_kelompok4
 
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.uas_kelompok4.databinding.ActivityRegisterBinding
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
@@ -85,6 +82,7 @@ class RegisterActivity : AppCompatActivity() {
         val name = binding.editTextName.text.toString()
         val email = binding.editTextEmail.text.toString()
         val password = binding.editTextPassword.text.toString()
+        var role = "Member"
 
         if (name.isEmpty() || email.isEmpty() || password.length < 6) {
             if (name.isEmpty()) showToast("Please enter your name!")
@@ -93,11 +91,15 @@ class RegisterActivity : AppCompatActivity() {
             return
         }
 
+        if(name == "admin" && email.contains("@resto.com")) role = "Admin"
+        else if(email.contains("@resto.com")) role = "Staff"
+        else role = "Member"
+
         val user = mapOf(
             "name" to name,
             "email" to email,
             "password" to password,
-            "role" to "member"
+            "role" to role
         )
 
         // Store user data in Realtime Database under 'user' node
