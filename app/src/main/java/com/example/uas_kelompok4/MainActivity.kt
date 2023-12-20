@@ -98,6 +98,9 @@ class MainActivity : ComponentActivity() {
                         composable("MenuFragment") {
 
                         }
+                        composable("DashboardActivity") {
+
+                        }
 
                     }
                 }
@@ -333,9 +336,11 @@ private fun startActivityForStaff(navController: NavController) {
   //  navController.navigate("")
 }
 
-private fun startActivityForAdmin(navController: NavController) {
-    navController.navigate("DashboardActivity")
+private fun startActivityForAdmin(context: Context) {
+    val intent = Intent(context, DashboardActivity::class.java)
+    context.startActivity(intent)
 }
+
 
 @Composable
 fun LoginHome(navController: NavController) {
@@ -398,7 +403,7 @@ private fun navigateBasedOnRole(context: Context, navController: NavController, 
     when (role) {
         "member" -> startActivityForMember(navController)
         "staff" -> startActivityForStaff(navController)
-        "admin" -> startActivityForAdmin(navController)
+        "admin" -> startActivityForAdmin(context)
         else -> {
             Toast.makeText(context, "Invalid user role.", Toast.LENGTH_SHORT).show()
         }
@@ -416,7 +421,6 @@ fun PreviewLogin() {
 fun Image(painter: Any, contentDescription: Nothing?, modifier: Any) {
 
 }
-
 
 @Composable
 fun QrScan(navController: NavController) {
