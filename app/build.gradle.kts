@@ -60,9 +60,6 @@ dependencies {
    // implementation("androidx.camera:camera-lifecycle:1.1.0-alpha03")
    // implementation("androidx.camera:camera-view:1.0.0-alpha31")
 
-    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
-    implementation("com.google.firebase:firebase-auth")
-
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation("com.google.zxing:core:3.3.0")
     implementation("me.dm7.barcodescanner:zxing:1.9.8")
@@ -84,6 +81,8 @@ dependencies {
     implementation("com.google.firebase:firebase-storage:20.3.0")
     implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
     implementation("com.google.firebase:firebase-auth-ktx:22.3.0")
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+
 
     implementation("androidx.recyclerview:recyclerview:1.3.1")
     testImplementation("junit:junit:4.13.2")

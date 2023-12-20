@@ -54,11 +54,15 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.uas_kelompok4.model.User
 import com.example.uas_kelompok4.ui.theme.UAS_Kelompok4Theme
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 
 class MainActivity : ComponentActivity() {
@@ -133,7 +137,7 @@ fun MainPage(navController: NavController) {
     }
 
 
-    // Function to start AddMenuActivity
+    // Function to goes regular .kt and .xml :D
     val goToAddMenuActivity: () -> Unit = {
         val intent = Intent(context, AddMenuActivity::class.java)
         startAddMenuActivity.launch(intent)
@@ -153,6 +157,11 @@ fun MainPage(navController: NavController) {
     val goToRegisterActivity: () -> Unit = {
         val intent = Intent(context, RegisterActivity::class.java)
         startRegisterActivity.launch(intent)
+    }
+
+    val goToRegularLoginActivity: () -> Unit = {
+        val intent = Intent(context, LoginActivity::class.java)
+        context.startActivity(intent)
     }
 
     val database = Firebase.database("https://uas-kelompok-4-5e25b-default-rtdb.asia-southeast1.firebasedatabase.app/")
@@ -223,7 +232,7 @@ fun MainPage(navController: NavController) {
             }
 
             OutlinedButton(
-                onClick = { navController.navigate("login") },
+                onClick = goToRegularLoginActivity,
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth()
@@ -281,9 +290,9 @@ fun Login(
     inputPass: String,
     onEmailValueChange: (String) -> Unit,
     onPassValueChange: (String) -> Unit,
-    onButtonClick: () -> Unit,
+    onButtonClick: () -> Unit,  // This is the function that should be called on button click
     navController: NavController
-){
+) {
     LazyColumn {
         item {
             Column(
@@ -322,10 +331,7 @@ fun Login(
                 Spacer(modifier = Modifier.height(20.dp))
 
                 OutlinedButton(
-                    onClick = {
-                        authenticateUser(inputEmail, inputPass, navController)
-                        onButtonClick()
-                    },
+                    onClick = onButtonClick,  // Connect the button click to the provided function
                     modifier = Modifier
                         .padding(8.dp)
                         .fillMaxWidth()
@@ -337,33 +343,58 @@ fun Login(
     }
 }
 
-private fun authenticateUser(email: String, password: String, navController: NavController) {
-    FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-        .addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val user = task.result?.user
-                getUserRole(navController, user?.uid)
+
+
+private fun signInWithEmailAndPassword(email: String, password: String, navController: NavController) {
+    val database = FirebaseDatabase.getInstance("https://uas-kelompok-4-5e25b-default-rtdb.asia-southeast1.firebasedatabase.app/")
+    val usersRef = database.getReference("users")
+
+    usersRef.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(object :
+        ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            if (dataSnapshot.exists()) {
+                val userSnapshot = dataSnapshot.children.first()
+                val storedPassword = userSnapshot.child("password").getValue(String::class.java)
+
+                if (password == storedPassword) {
+                    val identifier = email
+                    getUserRole(navController, identifier)
+                } else {
+                    Toast.makeText(
+                        navController.context,
+                        "Authentication failed: Incorrect email or password",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             } else {
-                val exception = task.exception
+                Toast.makeText(navController.context, "User does not exist", Toast.LENGTH_SHORT).show()
             }
         }
+
+        override fun onCancelled(databaseError: DatabaseError) {
+            Log.e("User", "Error checking user existence", databaseError.toException())
+        }
+    })
 }
 
-private fun getUserRole(navController: NavController, userId: String?) {
+private fun getUserRole(navController: NavController, identifier: String) {
     val database = FirebaseDatabase.getInstance()
-    val rolesRef = database.getReference("roles")
+    val rolesRef = database.getReference("role")
 
-    userId?.let {
-        rolesRef.child(it).get()
-            .addOnSuccessListener { dataSnapshot ->
-                val role = dataSnapshot.getValue(String::class.java)
-                // Redirect based on user role
+    rolesRef.child(identifier).get()
+        .addOnSuccessListener { dataSnapshot ->
+            val role = dataSnapshot.getValue(String::class.java)
+            val isVerified = dataSnapshot.child("verified").getValue(Boolean::class.java)
+
+            if (role != null && isVerified == true) {
                 navigateBasedOnRole(navController, role)
+            } else {
+                Toast.makeText(navController.context, "User is not verified or has no role.", Toast.LENGTH_SHORT).show()
             }
-            .addOnFailureListener {
-                // Handle failure to retrieve user role
-            }
-    }
+        }
+        .addOnFailureListener {
+            Log.e("User", "Failed to retrieve user role", it)
+        }
 }
 
 private fun navigateBasedOnRole(navController: NavController, role: String?) {
@@ -399,15 +430,23 @@ private fun startActivityForAdmin(navController: NavController) {
 fun LoginHome(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var pass by remember { mutableStateOf("") }
+
+    val signInWithEmailAndPassword: () -> Unit = {
+        if (email.isNotEmpty() && pass.isNotEmpty()) {
+         //   authenticateUser(email, pass, navController)
+        }
+    }
+
     Login(
         email,
         pass,
         onEmailValueChange = { email = it },
         onPassValueChange = { pass = it },
-        onButtonClick = { authenticateUser(email, pass, navController) },
+        onButtonClick = signInWithEmailAndPassword,
         navController = navController
     )
 }
+
 
 
 /*@Preview(showBackground = true)

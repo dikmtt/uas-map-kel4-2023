@@ -3,16 +3,17 @@
 
 
     <string name="Logo_area">Input Logo</string>
-    <string name="name_area">Input Name</string>
+    <string name="name_area">Restoran XYZ</string>
     <string name="scan_qr_btn">Order Now (Scan QR)</string>
     <string name="Lgn">Login</string>
     <string name="Rgstr">Register</string>
     <string name="Welcome_Text">Welcome</string>
     <string name="input_email">Enter Email:</string>
     <string name="input_pass">Enter Password:</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="scan_qrcode">Scan QR Code</string>
     <string name="error_msg">error</string>
     <string name="desc_test">desc test</string>
+    <string name="scan_error">ERROR? Silahkan coba lagi!</string>
 </resources>
