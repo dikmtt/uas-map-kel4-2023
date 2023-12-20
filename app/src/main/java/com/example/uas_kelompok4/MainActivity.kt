@@ -1,9 +1,9 @@
 package com.example.uas_kelompok4
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -18,8 +18,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Lock
@@ -30,7 +28,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -133,11 +130,6 @@ fun MainPage(navController: NavController) {
         }
     }
 
-    val startLoginActivity = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-        }
-    }
-
     // Function to goes regular .kt and .xml :D
     val goToAddMenuActivity: () -> Unit = {
         val intent = Intent(context, AddMenuActivity::class.java)
@@ -160,10 +152,6 @@ fun MainPage(navController: NavController) {
         startRegisterActivity.launch(intent)
     }
 
-    val goToLoginActivity: () -> Unit = {
-        val intent = Intent(context, LoginActivity::class.java)
-        startLoginActivity.launch(intent)
-    }
 
     val database = Firebase.database("https://uas-kelompok-4-5e25b-default-rtdb.asia-southeast1.firebasedatabase.app/")
     val myRef = database.getReference("message")
@@ -338,7 +326,7 @@ fun Login(
 
 
 private fun startActivityForMember(navController: NavController) {
-    navController.navigate("MainPage")
+    navController.navigate("QrScan")
 }
 
 private fun startActivityForStaff(navController: NavController) {
@@ -358,15 +346,7 @@ fun LoginHome(navController: NavController) {
 
     val signInWithEmailAndPassword: () -> Unit = {
         if (email.isNotEmpty() && pass.isNotEmpty()) {
-            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, pass)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        retrieveUserRole(navController)
-
-                    } else {
-                        Toast.makeText(context, "Authentication failed.", Toast.LENGTH_SHORT).show()
-                    }
-                }
+            authenticateUserInRealtimeDatabase(context, email, pass, navController)
         } else {
             Toast.makeText(context, "Email and password are required", Toast.LENGTH_SHORT).show()
         }
@@ -381,42 +361,46 @@ fun LoginHome(navController: NavController) {
     )
 }
 
-private fun retrieveUserRole(navController: NavController) {
-    val userId = FirebaseAuth.getInstance().currentUser?.uid
+private fun authenticateUserInRealtimeDatabase(context: Context, email: String, password: String, navController: NavController) {
+    val databaseRef = FirebaseDatabase.getInstance("https://uas-kelompok-4-5e25b-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("users")
 
-    if (userId != null) {
-        val database = FirebaseDatabase.getInstance().getReference("users")
-        database.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val role = snapshot.child("role").getValue(String::class.java)
+    databaseRef.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            if (snapshot.exists()) {
+                for (userSnapshot in snapshot.children) {
+                    val storedPassword = userSnapshot.child("password").getValue(String::class.java)
 
-                if (!role.isNullOrBlank()) {
-                    navigateBasedOnRole(navController, role)
-                } else {
-                    Toast.makeText(
-                        navController.context,
-                        "User role not found.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    if (password == storedPassword) {
+                        val role = userSnapshot.child("role").getValue(String::class.java)
+                        if (!role.isNullOrBlank()) {
+                            navigateBasedOnRole(context, navController, role)
+                            Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(context, "User role not found.", Toast.LENGTH_SHORT).show()
+                        }
+                    } else {
+                        Toast.makeText(context, "Incorrect password.", Toast.LENGTH_SHORT).show()
+                    }
+                    return
                 }
+            } else {
+                Toast.makeText(context, "User not found.", Toast.LENGTH_SHORT).show()
             }
+        }
 
-            override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(navController.context, "Error retrieving user role.", Toast.LENGTH_SHORT).show()
-            }
-        })
-    } else {
-        Toast.makeText(navController.context, "User ID not found.", Toast.LENGTH_SHORT).show()
-    }
+        override fun onCancelled(error: DatabaseError) {
+            Toast.makeText(context, "Error retrieving user data.", Toast.LENGTH_SHORT).show()
+        }
+    })
 }
 
-private fun navigateBasedOnRole(navController: NavController, role: String?) {
+private fun navigateBasedOnRole(context: Context, navController: NavController, role: String?) {
     when (role) {
         "member" -> startActivityForMember(navController)
         "staff" -> startActivityForStaff(navController)
         "admin" -> startActivityForAdmin(navController)
         else -> {
-            Toast.makeText(navController.context, "Invalid user role.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Invalid user role.", Toast.LENGTH_SHORT).show()
         }
     }
 }
