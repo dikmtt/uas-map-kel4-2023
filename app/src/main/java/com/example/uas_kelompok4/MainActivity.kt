@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalComposeUiApi::class)
-
 package com.example.uas_kelompok4
 
 import android.app.Activity
@@ -29,6 +27,7 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -39,7 +38,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -47,6 +45,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -91,18 +90,16 @@ class MainActivity : ComponentActivity() {
                             QrScan(navController)
                         }
                         composable("login") {
-
                             LoginHome(navController)
                         }
                         composable("register") {
-
                             //Register(navController)
                         }
                         composable("AddMenu") {
-                            // Create a composable or call AddMenuActivity here
+
                         }
                         composable("MenuFragment") {
-                            // Your MenuFragment composable or associated logic
+
                         }
 
                     }
@@ -136,6 +133,10 @@ fun MainPage(navController: NavController) {
         }
     }
 
+    val startLoginActivity = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+        }
+    }
 
     // Function to goes regular .kt and .xml :D
     val goToAddMenuActivity: () -> Unit = {
@@ -159,17 +160,19 @@ fun MainPage(navController: NavController) {
         startRegisterActivity.launch(intent)
     }
 
-    val goToRegularLoginActivity: () -> Unit = {
+    val goToLoginActivity: () -> Unit = {
         val intent = Intent(context, LoginActivity::class.java)
-        context.startActivity(intent)
+        startLoginActivity.launch(intent)
     }
 
     val database = Firebase.database("https://uas-kelompok-4-5e25b-default-rtdb.asia-southeast1.firebasedatabase.app/")
     val myRef = database.getReference("message")
-    val testDatabase: () -> Unit = {
-        myRef.setValue("Hello, World!")
-        Log.d("test", "$myRef")
-    }
+
+//    val testDatabase: () -> Unit = {
+ //       myRef.setValue("Hello, World!")
+  //      Log.d("test", "$myRef")
+  //  }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -232,7 +235,7 @@ fun MainPage(navController: NavController) {
             }
 
             OutlinedButton(
-                onClick = goToRegularLoginActivity,
+                onClick = { navController.navigate("Login") },
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth()
@@ -290,129 +293,49 @@ fun Login(
     inputPass: String,
     onEmailValueChange: (String) -> Unit,
     onPassValueChange: (String) -> Unit,
-    onButtonClick: () -> Unit,  // This is the function that should be called on button click
-    navController: NavController
+    onButtonClick: () -> Unit
 ) {
-    LazyColumn {
-        item {
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = stringResource(id = R.string.input_email),
-                    style = TextStyle(
-                        fontSize = 24.sp,
-                    )
-                )
-                TextField(
-                    value = inputEmail,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text
-                    ),
-                    onValueChange = onEmailValueChange
-                )
-                Spacer(modifier = Modifier.height(20.dp))
-                Text(
-                    text = stringResource(id = R.string.input_pass),
-                    style = TextStyle(
-                        fontSize = 24.sp,
-                    )
-                )
-                TextField(
-                    value = inputPass,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text
-                    ),
-                    onValueChange = onPassValueChange
-                )
-                Spacer(modifier = Modifier.height(20.dp))
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        OutlinedTextField(
+            value = inputEmail,
+            onValueChange = { onEmailValueChange(it) },
+            label = { Text("Email") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        )
 
-                OutlinedButton(
-                    onClick = onButtonClick,  // Connect the button click to the provided function
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .fillMaxWidth()
-                ) {
-                    Text(text = "Submit")
-                }
-            }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = inputPass,
+            onValueChange = { onPassValueChange(it) },
+            label = { Text("Password") },
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Button(
+            onClick = onButtonClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        ) {
+            Text("Login")
         }
     }
 }
 
-
-
-private fun signInWithEmailAndPassword(email: String, password: String, navController: NavController) {
-    val database = FirebaseDatabase.getInstance("https://uas-kelompok-4-5e25b-default-rtdb.asia-southeast1.firebasedatabase.app/")
-    val usersRef = database.getReference("users")
-
-    usersRef.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(object :
-        ValueEventListener {
-        override fun onDataChange(dataSnapshot: DataSnapshot) {
-            if (dataSnapshot.exists()) {
-                val userSnapshot = dataSnapshot.children.first()
-                val storedPassword = userSnapshot.child("password").getValue(String::class.java)
-
-                if (password == storedPassword) {
-                    val identifier = email
-                    getUserRole(navController, identifier)
-                } else {
-                    Toast.makeText(
-                        navController.context,
-                        "Authentication failed: Incorrect email or password",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            } else {
-                Toast.makeText(navController.context, "User does not exist", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        override fun onCancelled(databaseError: DatabaseError) {
-            Log.e("User", "Error checking user existence", databaseError.toException())
-        }
-    })
-}
-
-private fun getUserRole(navController: NavController, identifier: String) {
-    val database = FirebaseDatabase.getInstance()
-    val rolesRef = database.getReference("role")
-
-    rolesRef.child(identifier).get()
-        .addOnSuccessListener { dataSnapshot ->
-            val role = dataSnapshot.getValue(String::class.java)
-            val isVerified = dataSnapshot.child("verified").getValue(Boolean::class.java)
-
-            if (role != null && isVerified == true) {
-                navigateBasedOnRole(navController, role)
-            } else {
-                Toast.makeText(navController.context, "User is not verified or has no role.", Toast.LENGTH_SHORT).show()
-            }
-        }
-        .addOnFailureListener {
-            Log.e("User", "Failed to retrieve user role", it)
-        }
-}
-
-private fun navigateBasedOnRole(navController: NavController, role: String?) {
-    when (role) {
-        "member" -> {
-            startActivityForMember(navController)
-        }
-        "staff" -> {
-            // Add code for staff navigation
-        }
-        "admin" -> {
-            startActivityForAdmin(navController)
-        }
-        else -> {
-            Toast.makeText(navController.context, "Must be a member...", Toast.LENGTH_SHORT).show()
-        }
-    }
-}
 
 private fun startActivityForMember(navController: NavController) {
     navController.navigate("MainPage")
@@ -428,12 +351,24 @@ private fun startActivityForAdmin(navController: NavController) {
 
 @Composable
 fun LoginHome(navController: NavController) {
+    val context = LocalContext.current
+
     var email by remember { mutableStateOf("") }
     var pass by remember { mutableStateOf("") }
 
     val signInWithEmailAndPassword: () -> Unit = {
         if (email.isNotEmpty() && pass.isNotEmpty()) {
-         //   authenticateUser(email, pass, navController)
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, pass)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        retrieveUserRole(navController)
+
+                    } else {
+                        Toast.makeText(context, "Authentication failed.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+        } else {
+            Toast.makeText(context, "Email and password are required", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -442,11 +377,49 @@ fun LoginHome(navController: NavController) {
         pass,
         onEmailValueChange = { email = it },
         onPassValueChange = { pass = it },
-        onButtonClick = signInWithEmailAndPassword,
-        navController = navController
+        onButtonClick = signInWithEmailAndPassword
     )
 }
 
+private fun retrieveUserRole(navController: NavController) {
+    val userId = FirebaseAuth.getInstance().currentUser?.uid
+
+    if (userId != null) {
+        val database = FirebaseDatabase.getInstance().getReference("users")
+        database.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val role = snapshot.child("role").getValue(String::class.java)
+
+                if (!role.isNullOrBlank()) {
+                    navigateBasedOnRole(navController, role)
+                } else {
+                    Toast.makeText(
+                        navController.context,
+                        "User role not found.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(navController.context, "Error retrieving user role.", Toast.LENGTH_SHORT).show()
+            }
+        })
+    } else {
+        Toast.makeText(navController.context, "User ID not found.", Toast.LENGTH_SHORT).show()
+    }
+}
+
+private fun navigateBasedOnRole(navController: NavController, role: String?) {
+    when (role) {
+        "member" -> startActivityForMember(navController)
+        "staff" -> startActivityForStaff(navController)
+        "admin" -> startActivityForAdmin(navController)
+        else -> {
+            Toast.makeText(navController.context, "Invalid user role.", Toast.LENGTH_SHORT).show()
+        }
+    }
+}
 
 
 /*@Preview(showBackground = true)
