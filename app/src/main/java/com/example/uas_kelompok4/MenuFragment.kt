@@ -43,11 +43,12 @@ class MenuFragment : Fragment() ,MenuItemAdapter.OnItemChangedListener {
     private lateinit var fbRef: DatabaseReference
     private lateinit var fbRef1: DatabaseReference
     private var menuItemAdapter: MenuItemAdapter? = null
-    private var orderItemClickListener: OrderItemClickListener? = null
+    var orderItemClickListener: OrderItemClickListener? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        retainInstance = true
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
@@ -147,12 +148,23 @@ class MenuFragment : Fragment() ,MenuItemAdapter.OnItemChangedListener {
             totalPrice += selectedItem.price * selectedItem.boughtValue
             totalItem += selectedItem.boughtValue
         }
-        val ordersAL: ArrayList<MenuItem> = orders as ArrayList<MenuItem>
-        //Put these objects to the ConfirmOrderFragments
-        val coFrag = ConfirmOrderFragment.newInstance(totalItem, totalPrice, ordersAL)
-        val ft = activity?.supportFragmentManager?.beginTransaction()
-        ft?.replace(R.id.order_fragments, coFrag)
-        ft?.commit()
+        if(totalPrice == 0){
+            showNoItemsDialog()
+        }else{
+            orderItemClickListener?.onOrderItemsSelected(orderedMenu)
+            val ordersAL: ArrayList<MenuItem> = orders as ArrayList<MenuItem>
+            //Put these objects to the ConfirmOrderFragments
+            val coFrag = ConfirmOrderFragment.newInstance(totalItem, totalPrice, ordersAL)
+            val ft = activity?.supportFragmentManager?.beginTransaction()
+            if (!coFrag.isAdded) {
+                ft?.replace(R.id.order_fragments, coFrag)
+            } else {
+                if (ft != null) {
+                    ft.show(coFrag)
+                }
+            }
+            ft?.commit()
+        }
 
         /*if (orderedMenu.isNotEmpty()) {
             val transactionMap = HashMap<String, Any>()

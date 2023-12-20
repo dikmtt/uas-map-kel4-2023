@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
@@ -25,6 +26,7 @@ import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.properties.Delegates
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -45,25 +47,66 @@ class ConfirmOrderFragment : Fragment() {
     private var param2: String? = null
 
     private var orders = ArrayList<MenuItem>()
+    private var orderedMenu = mutableListOf<MenuItem>()
     private lateinit var orderAdapter: RecyclerView.Adapter<*>
     private lateinit var layManager: RecyclerView.LayoutManager
 
     private lateinit var fbRef: DatabaseReference
+    private lateinit var fbRef1: DatabaseReference
     private lateinit var listOfPromos: ArrayList<Promo>
     private lateinit var promoNames: ArrayList<String>
 
-    private var promoPos: Int = 0
-    private var totalItems: Int = 0
-    private var totalPrice: Int = 0
+    private var promoPos : Int = 0
+    private var totalItems : Int = 0
+    private var totalPrice : Int = 0
 
-    @Suppress("DEPRECATION")
+    private var totalMenu : Int = 0
+    private var totalPrices : Int = 0
+
+    private var orderProcessingListener: OrderProcessingListener? = null
+
+    // Function to set the listener
+    fun setOrderProcessingListener(listener: OrderProcessingListener) {
+        orderProcessingListener = listener
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        retainInstance = true
         arguments?.let {
-            totalItems = it.getInt(TOTALITEMS)
-            totalPrice = it.getInt(TOTALPRICE)
-            orders = it.getParcelableArrayList(ORDER_LIST)!!
+            totalItems = it.getInt(TOTALITEMS, 0) // Use default value if not present
+            totalPrice = it.getInt(TOTALPRICE, 0) // Use default value if not present
+            orders = it.getParcelableArrayList(ORDER_LIST) ?: ArrayList()
         }
+        orderedMenu = orders
+        totalMenu = totalItems
+        totalPrices = totalPrice
+    }
+
+    override fun onStart() {
+        super.onStart()
+        updateTotalValues()
+    }
+    fun storeValue(){
+        orderedMenu = orders
+        totalMenu = totalItems
+        totalPrices = totalPrice
+    }
+    fun updateTotalValues() {
+        var totalItem = 0
+        var totalPrice = 0
+
+        for (selectedItem in orders) {
+            totalPrice += selectedItem.price * selectedItem.boughtValue
+            totalItem += selectedItem.boughtValue
+        }
+    }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(TOTALITEMS, totalItems)
+        outState.putInt(TOTALPRICE, totalPrice)
+        outState.putParcelableArrayList(ORDER_LIST, orders)
     }
 
     override fun onCreateView(
@@ -76,8 +119,10 @@ class ConfirmOrderFragment : Fragment() {
         listOfPromos = arrayListOf()
         promoNames = arrayListOf()
         getPromos()
+
         return view
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -112,10 +157,16 @@ class ConfirmOrderFragment : Fragment() {
             }
         }
 
-        cTotal.text = "Total:\t\t\t " + totalPrice
+
+        val btn = view.findViewById<Button>(R.id.order_to_review_btn)
+        btn.setOnClickListener {
+            processOrder()
+        }
+        cTotal.text = "Total:\t\t\t $totalPrice"
     }
 
     private fun getPromos() {
+        fbRef = FirebaseDatabase.getInstance("https://uas-kelompok-4-5e25b-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("promos")
         fbRef.addValueEventListener(object:
         ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -127,7 +178,7 @@ class ConfirmOrderFragment : Fragment() {
                     for(promoSnap in snapshot.children) {
                         val promoIt = promoSnap.getValue(Promo::class.java)
                         listOfPromos.add(promoIt!!)
-                        promoNames.add(promoIt!!.name)
+                        promoIt!!.name?.let { promoNames.add(it) }
                     }
                 }
             }
@@ -138,113 +189,111 @@ class ConfirmOrderFragment : Fragment() {
         })
     }
     fun clickButton() {
-        processOrder(orders, totalItems, totalPrice)
+        processOrder()
     }
-    fun processOrder(orders: ArrayList<MenuItem>, totItems: Int, totPrice: Int) {
-        val orders2 = orders
-        val totItems2 = totItems
-        val totPrice2 = totPrice
+
+
+
+    fun processOrder() {
+        var totalItem = 0
+        var totalPrice = 0
         val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
         val currentTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
 
-        /*for (selectedItem in orderedMenu) {
-            val order = MenuItem(
-                selectedItem.id,
-                selectedItem.name,
-                selectedItem.imageUrl,
-                selectedItem.price,
-                selectedItem.category,
-                selectedItem.boughtValue,
-            )
-            orders.add(order)
+        for (selectedItem in orders) {
             totalPrice += selectedItem.price * selectedItem.boughtValue
             totalItem += selectedItem.boughtValue
-        }*/
-        //Put these objects to the ConfirmOrderFragments
-
-        //if (orders.isNotEmpty()) {
-            val transactionMap = HashMap<String, Any>()
-            transactionMap["date"] = currentDate
-            transactionMap["time"] = currentTime
-            transactionMap["orderedItems"] = orders2
-            transactionMap["totalItem"] = totItems2
-            transactionMap["totalPrice"] = totPrice2
-            transactionMap["promoId"] = "promoId" // Replace this with your actual promo ID if available
-            transactionMap["userId"] = "userId" // Replace this with the actual user ID
-
-            // Get reference to Firebase database for transactions
-            fbRef = FirebaseDatabase.getInstance("https://uas-kelompok-4-5e25b-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("transactions")
-            val transactionKey = fbRef.push().key
-
-            // Push transaction data to Firebase database
-            if (transactionKey != null) {
-                fbRef.child(transactionKey).setValue(transactionMap)
-                    .addOnSuccessListener {
-                        // Handle success
-                        Log.d("Firebase", "Transaction added successfully")
-                        showSuccessDialog()
-                    }
-                    .addOnFailureListener {
-                        // Handle failure
-                        Log.e("Firebase", "Failed to add transaction: $it")
-                    }
-            }
-        /*} else {
-            Log.d("MenuFragment", "No items to process/order")
+        }
+        if(totalPrice == 0){
             showNoItemsDialog()
-        }*/
-    }
+        }else{
+            if (orders.isNotEmpty()) {
+                val transactionMap = HashMap<String, Any>()
+                transactionMap["date"] = currentDate
+                transactionMap["time"] = currentTime
+                transactionMap["orderedItems"] = orders
+                transactionMap["totalItem"] = totalItem
+                transactionMap["totalPrice"] = totalPrice
+                transactionMap["promoId"] = "promoId" // Replace this with your actual promo ID if available
+                transactionMap["userId"] = "userId" // Replace this with the actual user ID
 
+                // Get reference to Firebase database for transactions
+                fbRef1 = FirebaseDatabase.getInstance("https://uas-kelompok-4-5e25b-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("transactions")
+                val transactionKey = fbRef1.push().key
+
+                // Push transaction data to Firebase database
+                if (transactionKey != null) {
+                    fbRef1.child(transactionKey).setValue(transactionMap)
+                        .addOnSuccessListener {
+                            // Handle success
+                            Log.d("Firebase", "Transaction added successfully")
+                            showSuccessDialog()
+                        }
+                        .addOnFailureListener {
+                            // Handle failure
+                            Log.e("Firebase", "Failed to add transaction: $it")
+                        }
+                }
+            } else {
+                Log.d("MenuFragment", "No items to process/order")
+                showNoItemsDialog()
+            }
+        }
+    }
+    interface OrderProcessingListener {
+        fun onOrderProcessed(orders: ArrayList<MenuItem>, totalItems: Int, totalPrice: Int)
+    }
 
 
     // Inside your Fragment or Activity class
 
-    private fun showSuccessDialog() {
-        val alertDialogBuilder = AlertDialog.Builder(requireContext())
-        alertDialogBuilder.setTitle("Success")
-        alertDialogBuilder.setMessage("Transaction added successfully!")
-
-        alertDialogBuilder.setPositiveButton("OK") { _, _ ->
-            // Navigate back to the main menu or perform any necessary action
-            // Replace 'MainActivity' with your main menu activity
-            val intent = Intent(requireContext(), MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
-            requireActivity().finish()
-        }
-
-        val alertDialog = alertDialogBuilder.create()
-        alertDialog.show()
-    }
     private fun showNoItemsDialog() {
-        val alertDialogBuilder = AlertDialog.Builder(requireContext())
-        alertDialogBuilder.setTitle("No Items to Order")
-        alertDialogBuilder.setMessage("There are no items in your order list.")
+        activity?.let {
+            val alertDialogBuilder = AlertDialog.Builder(it)
+            alertDialogBuilder.setTitle("No Items to Order")
+            alertDialogBuilder.setMessage("There are no items in your order list.")
 
-        alertDialogBuilder.setPositiveButton("OK") { dialog, _ ->
-            dialog.dismiss()
+            alertDialogBuilder.setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+            }
+
+            val alertDialog = alertDialogBuilder.create()
+            alertDialog.show()
+        }
+    }
+
+    private fun showSuccessDialog() {
+        if (!isAdded || context == null) {
+            Log.e("ConfirmOrderFragment", "Fragment is not attached to the activity or context is null")
+            return
         }
 
-        val alertDialog = alertDialogBuilder.create()
-        alertDialog.show()
+        activity?.let {
+            val alertDialogBuilder = AlertDialog.Builder(it)
+            alertDialogBuilder.setTitle("Success")
+            alertDialogBuilder.setMessage("Transaction added successfully!")
+
+            alertDialogBuilder.setPositiveButton("OK") { _, _ ->
+                // Navigate back to the main menu or perform any necessary action
+                // Replace 'MainActivity' with your main menu activity
+                val intent = Intent(requireContext(), MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+                requireActivity().finish()
+            }
+
+            val alertDialog = alertDialogBuilder.create()
+            alertDialog.show()
+        }
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ConfirmOrderFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(totalitems: Int, totalprice: Int, orderList: ArrayList<MenuItem>) =
+        fun newInstance(totalItems: Int, totalPrice: Int, orderList: ArrayList<MenuItem>) =
             ConfirmOrderFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(TOTALITEMS, totalitems)
-                    putInt(TOTALPRICE, totalprice)
+                    putInt(TOTALITEMS, totalItems)
+                    putInt(TOTALPRICE, totalPrice)
                     putParcelableArrayList(ORDER_LIST, orderList)
                 }
             }

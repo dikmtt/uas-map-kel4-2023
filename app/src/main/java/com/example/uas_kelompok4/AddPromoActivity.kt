@@ -16,8 +16,8 @@ class AddPromoActivity : AppCompatActivity() {
         binding = ActivityAddPromoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        fbRef = FirebaseDatabase.getInstance()
-            .getReference("promo")
+        fbRef = FirebaseDatabase.getInstance("https://uas-kelompok-4-5e25b-default-rtdb.asia-southeast1.firebasedatabase.app/")
+            .getReference("promos")
 
         binding.submitPromo.setOnClickListener {
             saveData()
@@ -28,15 +28,29 @@ class AddPromoActivity : AppCompatActivity() {
         val discAmount = binding.discAmountEt.text.toString().toInt()
         val minPrice = binding.minPurchaseEt.text.toString().toInt()
         var discAmountDb: Double = 0.0
-        if(name.isEmpty()) Toast.makeText(this, "Please enter the promo name!", Toast.LENGTH_LONG).show()
-        if((discAmount > 100) or (discAmount < 0)) Toast.makeText(this, "Please enter a valid discount amount!", Toast.LENGTH_LONG).show()
-        else {
-            discAmountDb = (1 / discAmount).toDouble()
+
+        if (name.isEmpty()) {
+            Toast.makeText(this, "Please enter the promo name!", Toast.LENGTH_LONG).show()
+            return
         }
+
+        if (discAmount > 100 || discAmount < 0) {
+            Toast.makeText(this, "Please enter a valid discount amount!", Toast.LENGTH_LONG).show()
+            return
+        } else {
+            discAmountDb = discAmount.toDouble()
+        }
+
         val promoId = fbRef.push().key!!
         val promo = Promo(promoId, name, discAmountDb, minPrice)
         fbRef.child(promoId).setValue(promo)
-        Toast.makeText(this, "New promo successfully added", Toast.LENGTH_LONG).show()
-        finish()
+            .addOnSuccessListener {
+                Toast.makeText(this, "New promo successfully added", Toast.LENGTH_LONG).show()
+                finish()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Failed to add promo: $it", Toast.LENGTH_LONG).show()
+            }
     }
+
 }

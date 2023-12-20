@@ -94,6 +94,8 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation("androidx.navigation:navigation-compose:2.7.5")
     implementation("com.github.bumptech.glide:glide:4.14.2")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.31")
+    implementation("androidx.core:core-ktx:1.6.0")
 
 }
 
