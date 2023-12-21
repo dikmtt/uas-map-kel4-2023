@@ -271,11 +271,11 @@ fun MainPage(navController: NavController) {
 //            ) {
 //                Text("Go to Dashboard Activity")
 //            }
-            Button(
-                onClick = goToOrderActivity
-            ) {
-                Text("Go to Order Activity")
-            }
+//            Button(
+//                onClick = goToOrderActivity
+//            ) {
+//                Text("Go to Order Activity")
+//            }
 //            Button(
 //                onClick = goToAddPromoActivity
 //            ) {

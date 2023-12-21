@@ -27,6 +27,7 @@ import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -291,8 +292,15 @@ class ConfirmOrderFragment : Fragment() {
         Log.d("selectedPromo" , "$selectedPromo")
         var totalItem = 0
         var totalPrice = 0
-        val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
-        val currentTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
+        val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).apply {
+            timeZone = TimeZone.getTimeZone("Asia/Jakarta")
+        }.format(Date())
+
+        val currentTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).apply {
+            timeZone = TimeZone.getTimeZone("Asia/Jakarta")
+        }.format(Date())
+
+
 
         for (selectedItem in orders) {
             totalPrice += selectedItem.price * selectedItem.boughtValue
