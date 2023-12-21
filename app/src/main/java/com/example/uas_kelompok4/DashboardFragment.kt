@@ -1,6 +1,5 @@
 package com.example.uas_kelompok4
 
-import com.example.uas_kelompok4.UpdateMenusActivity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,8 +17,7 @@ class DashboardFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    var currUser: User = User("1","Ken", "ken@resto.com", "ooofff", "Staff")
-    //User("admin", "admin@resto.com", "admin", "Admin")
+    lateinit var currUser: User
     lateinit var showUsers: View
     lateinit var addMenus: View
     lateinit var addPromos: View
@@ -55,9 +53,11 @@ class DashboardFragment : Fragment() {
         if(currUser.role == "Admin") {
             addMenus.visibility = View.VISIBLE
             addPromos.visibility = View.VISIBLE
-        } else {
+            updateMenus.visibility = View.VISIBLE
+        } else if(currUser.role == "Staff") {
             addMenus.visibility = View.GONE
             addPromos.visibility = View.GONE
+            updateMenus.visibility = View.GONE
         }
         showUsers.setOnClickListener {
             val i: Intent = Intent(activity, UserList::class.java)
