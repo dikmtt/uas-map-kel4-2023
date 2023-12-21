@@ -130,13 +130,14 @@ class ConfirmOrderFragment : Fragment() {
         fbRef = FirebaseDatabase.getInstance().getReference("promo")
         listOfPromos = arrayListOf()
         promoNames = arrayListOf()
-        if(currUser != null) {
-            getPromos()
-        }
-        else {
-            listOfPromos.add(Promo("None", "None", 0.0, 0))
-            promoNames.add("None")
-        }
+        getPromos()
+//        if(currUser != null) {
+//            getPromos()
+//        }
+//        else {
+//            listOfPromos.add(Promo("None", "None", 0.0, 0))
+//            promoNames.add("None")
+//        }
 
         return view
     }
@@ -220,6 +221,12 @@ class ConfirmOrderFragment : Fragment() {
         }
 
 
+        if (currUser == null) {
+            val choosePromo = view.findViewById<TextView>(R.id.choosePromo)
+            choosePromo.visibility = View.GONE
+            promoList.visibility = View.GONE
+            disc.visibility = View.GONE
+        }
         val btn = view.findViewById<Button>(R.id.order_to_review_btn)
         btn.setOnClickListener {
             processOrder(selectedPromoPosition)
@@ -276,6 +283,7 @@ class ConfirmOrderFragment : Fragment() {
         val promoList = view?.findViewById<Spinner>(R.id.promoList)
         promoList?.adapter = promoAdapter
         promoAdapter.notifyDataSetChanged()
+        Log.d("listOfPromos", listOfPromos.toString())
     }
 
     fun processOrder(position : Int) {

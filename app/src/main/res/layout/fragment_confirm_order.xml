@@ -21,6 +21,7 @@
         android:layout_height="300dp"
         tools:listitem="@layout/order_list_item"/>
     <TextView
+        android:id="@+id/choosePromo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
