@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.uas_kelompok4.databinding.FragmentMenuBinding
 import com.example.uas_kelompok4.model.MenuItem
+import com.example.uas_kelompok4.model.User
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -45,6 +46,7 @@ class MenuFragment : Fragment() ,MenuItemAdapter.OnItemChangedListener {
     private var menuItemAdapter: MenuItemAdapter? = null
     var orderItemClickListener: OrderItemClickListener? = null
 
+    private var currUser: User? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +54,7 @@ class MenuFragment : Fragment() ,MenuItemAdapter.OnItemChangedListener {
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
+            currUser = it.getParcelable("currUser")
         }
     }
 
@@ -244,10 +247,10 @@ class MenuFragment : Fragment() ,MenuItemAdapter.OnItemChangedListener {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(user: User, param2: String) =
             MenuFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
+                    putParcelable("currUser", user)
                     putString(ARG_PARAM2, param2)
                 }
             }
