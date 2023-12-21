@@ -33,7 +33,7 @@ class OrderActivity : AppCompatActivity(), MenuFragment.OrderItemClickListener, 
             currUser = extras.getParcelable("currUser")
         }
 
-        rvFrag = MenuFragment.newInstance("param1", "param2")
+        rvFrag = currUser?.let { MenuFragment.newInstance(it, "param2") }!!
         rvFrag.orderItemClickListener = this
         currFrag = rvFrag
         isInMenu = 1
