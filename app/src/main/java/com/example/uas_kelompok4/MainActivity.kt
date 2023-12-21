@@ -59,6 +59,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 
+lateinit var tUser: User
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -346,7 +347,7 @@ fun Login(
 
 private fun startActivityForMember(context: Context, currUser: User) {
     val intent = Intent(context, DashboardActivity::class.java)
-    intent.putExtra("Member", currUser)
+    intent.putExtra("USER", currUser)
     context.startActivity(intent)
 }
 
@@ -354,13 +355,15 @@ private fun startActivityForMember(context: Context, currUser: User) {
     navController.navigate("QrScan")
 }*/
 
-private fun startActivityForStaff(context: Context) {
+private fun startActivityForStaff(context: Context, currUser: User) {
     val intent = Intent(context, DashboardActivity::class.java)
+    intent.putExtra("USER", currUser)
     context.startActivity(intent)
 }
 
-private fun startActivityForAdmin(context: Context) {
+private fun startActivityForAdmin(context: Context, currUser: User) {
     val intent = Intent(context, DashboardActivity::class.java)
+    intent.putExtra("USER", currUser)
     context.startActivity(intent)
 }
 
@@ -401,14 +404,15 @@ private fun authenticateUserInRealtimeDatabase(context: Context, email: String, 
                     if (password == storedPassword) {
                         val role = userSnapshot.child("role").getValue(String::class.java)
                         if (!role.isNullOrBlank()) {
-                            navigateBasedOnRole(context, navController, role)
+                            tUser = userSnapshot.getValue(User::class.java)!!
+                            navigateBasedOnRole(context, navController, role, tUser)
 
                             Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
                         } else {
                             Toast.makeText(context, "User role not found.", Toast.LENGTH_SHORT).show()
                         }
                     } else {
-                        Toast.makeText(context, "Incorrect password.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Incorrect credentials.", Toast.LENGTH_SHORT).show()
                     }
                     return
                 }
@@ -423,11 +427,12 @@ private fun authenticateUserInRealtimeDatabase(context: Context, email: String, 
     })
 }
 
-private fun navigateBasedOnRole(context: Context, navController: NavController, role: String?) {
+private fun navigateBasedOnRole(context: Context, navController: NavController, role: String?
+                                ,currUser: User) {
     when (role) {
         "Member" -> startActivityForMember(context, currUser)
-        "Staff" -> startActivityForStaff(context)
-        "Admin" -> startActivityForAdmin(context)
+        "Staff" -> startActivityForStaff(context, currUser)
+        "Admin" -> startActivityForAdmin(context, currUser)
         else -> {
             Toast.makeText(context, "Invalid user role.", Toast.LENGTH_SHORT).show()
         }

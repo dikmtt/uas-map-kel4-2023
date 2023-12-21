@@ -5,17 +5,21 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.example.uas_kelompok4.model.User
 import com.google.zxing.integration.android.IntentIntegrator
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanIntentResult
 import com.journeyapps.barcodescanner.ScanOptions
 
 class QrScan : AppCompatActivity() {
+
+    private var currUser: User? = null
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
@@ -52,6 +56,7 @@ class QrScan : AppCompatActivity() {
     private fun setResult(result: String) {
         if (result == "https://me-qr.com/riYpdt1j") {
             val intent = Intent(this, OrderActivity::class.java)
+            intent.putExtra("USR2", currUser)
             startActivity(intent)
             // Finish the current activity to prevent going back to the QR scan after navigating to OrderActivity
             finish()
@@ -61,9 +66,15 @@ class QrScan : AppCompatActivity() {
         }
     }
 
+    @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_qrscan)
+        val extras: Bundle? = intent.extras
+        if(extras != null) {
+            currUser = extras.getParcelable("USR1")
+        }
+        currUser?.id?.let { Log.d("currUser", it) }
         initViews()
     }
 

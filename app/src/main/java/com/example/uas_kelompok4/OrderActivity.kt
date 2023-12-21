@@ -7,9 +7,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.uas_kelompok4.model.MenuItem
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import com.example.uas_kelompok4.model.User
 
 class OrderActivity : AppCompatActivity(), MenuFragment.OrderItemClickListener, ConfirmOrderFragment.OrderProcessingListener {
 
@@ -23,9 +21,17 @@ class OrderActivity : AppCompatActivity(), MenuFragment.OrderItemClickListener, 
     private var totalItems: Int = 0 // Define totalItems
     private var totalPrice: Int = 0 // Define totalPrice
 
+    public var currUser: User? = null
+
+    @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_order)
+
+        val extras: Bundle? = intent.extras
+        if(extras != null) {
+            currUser = extras.getParcelable("USR2")
+        }
 
         rvFrag = MenuFragment.newInstance("param1", "param2")
         rvFrag.orderItemClickListener = this

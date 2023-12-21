@@ -17,7 +17,7 @@ class DashboardFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    lateinit var currUser: User
+    private lateinit var currUser: User
     lateinit var showUsers: View
     lateinit var addMenus: View
     lateinit var addPromos: View

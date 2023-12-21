@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.uas_kelompok4.model.MenuItem
 import com.example.uas_kelompok4.model.Promo
+import com.example.uas_kelompok4.model.User
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -26,7 +27,6 @@ import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import kotlin.properties.Delegates
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -67,6 +67,8 @@ class ConfirmOrderFragment : Fragment() {
 
     private var orderProcessingListener: OrderProcessingListener? = null
 
+    private var currUser: User? = null
+
     // Function to set the listener
     fun setOrderProcessingListener(listener: OrderProcessingListener) {
         orderProcessingListener = listener
@@ -85,6 +87,10 @@ class ConfirmOrderFragment : Fragment() {
         totalMenu = totalItems
         totalPrices = totalPrice
         totalDiscPrice = totalPrices
+        val oa = OrderActivity()
+        if(oa.currUser != null) {
+            currUser = oa.currUser
+        }
     }
 
     override fun onStart() {
@@ -236,7 +242,7 @@ class ConfirmOrderFragment : Fragment() {
                 promoNames.clear()
                 listOfPromos.add(Promo("None", "None", 0.0, 0))
                 promoNames.add("None")
-                if(snapshot.exists()) {
+                if(snapshot.exists() && currUser != null) {
                     for(promoSnap in snapshot.children) {
                         val promoIt = promoSnap.getValue(Promo::class.java)
                         listOfPromos.add(promoIt!!)
@@ -292,7 +298,12 @@ class ConfirmOrderFragment : Fragment() {
                 transactionMap["totalItem"] = totalItem
                 transactionMap["totalPrice"] = totalPrice
                 transactionMap["promoId"] = listOfPromos[selectedPromoPosition].id!! // Replace this with your actual promo ID if available
-                transactionMap["userId"] = "userId" // Replace this with the actual user ID
+                if(currUser != null) {
+                    transactionMap["userId"] = currUser!!.id // Replace this with the actual user ID
+                }
+                else {
+                    transactionMap["userId"] = "Guest"
+                }
                 // Get reference to Firebase database for transactions
                 fbRef1 = FirebaseDatabase.getInstance("https://uas-kelompok-4-5e25b-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("transactions")
                 val transactionKey = fbRef1.push().key

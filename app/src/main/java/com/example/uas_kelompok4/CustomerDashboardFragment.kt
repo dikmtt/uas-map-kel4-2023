@@ -22,8 +22,8 @@ class CustomerDashboardFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    var currUser: User = User("1","Ken", "ken@mail.com", "ooofff", "Member")
-    var toScan = requireView().findViewById<View>(R.id.dshb_order)
+    private lateinit var currUser: User
+    lateinit var toScan: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,8 +47,10 @@ class CustomerDashboardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        toScan = requireView().findViewById<View>(R.id.dshb_order)
         toScan.setOnClickListener {
             val i: Intent = Intent(activity, QrScan::class.java)
+            i.putExtra("USR1", currUser)
             startActivity(i)
         }
     }
