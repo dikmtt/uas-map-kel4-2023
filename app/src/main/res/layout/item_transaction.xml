@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Date"
-        android:textSize="25dp"
+        android:textSize="20dp"
         android:layout_weight="25"/>
 
     <TextView
@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Time"
-        android:textSize="25dp"
+        android:textSize="20dp"
         android:layout_weight="25"/>
 
     <TextView
@@ -27,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Total"
-        android:textSize="25dp"
+        android:textSize="20dp"
         android:layout_weight="25"/>
 
     <TextView
@@ -35,6 +35,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Guest"
-        android:textSize="25dp"
+        android:textSize="20dp"
         android:layout_weight="25"/>
 </LinearLayout>

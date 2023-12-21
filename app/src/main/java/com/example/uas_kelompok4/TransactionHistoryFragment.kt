@@ -71,12 +71,23 @@ class TransactionHistoryFragment : Fragment() {
         fbRef.addValueEventListener(object:
             ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                val tempList = mutableListOf<Transaction>()
                 listOfTransactions.clear()
                 if (snapshot.exists()) {
                     for (tSnap in snapshot.children) {
                         val tranIt = tSnap.getValue(Transaction::class.java)
-                        listOfTransactions.add(tranIt!!)
+                        tranIt?.let {
+                            tempList.add(it)
+                        }
                     }
+
+                    // Sort the list by timestamp in descending order
+                    val sortedTransactions = tempList.sortedWith(compareByDescending<Transaction> { it.date }.thenByDescending { it.time })
+
+
+                    // Clear and add the sorted transactions to the main list
+                    listOfTransactions.clear()
+                    listOfTransactions.addAll(sortedTransactions)
                 }
             }
 
