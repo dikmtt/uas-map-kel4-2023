@@ -1,56 +1,42 @@
 package com.example.uas_kelompok4
 
 // TransactionAdapter.kt
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.TextView
-import com.example.uas_kelompok4.model.TransactionItem
+import androidx.recyclerview.widget.RecyclerView
+import com.example.uas_kelompok4.model.Transaction
 class TransactionAdapter(
-    private val context: Context,
-    private val transactionList: List<TransactionItem>
-) : BaseAdapter() {
+    private val transactionList: List<Transaction>
+) : RecyclerView.Adapter<TransactionAdapter.TransactionHolder>() {
+    var onClick : ((Transaction) -> Unit)? = null
 
-    override fun getCount(): Int {
+    class TransactionHolder(view: View): RecyclerView.ViewHolder(view) {
+        val date = view.findViewById<TextView>(R.id.transactionDateTextView)
+        val time = view.findViewById<TextView>(R.id.transactionTimeTextView)
+        val total = view.findViewById<TextView>(R.id.transactionTotalTextView)
+        val trUser = view.findViewById<TextView>(R.id.transactionUserTextView)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_transaction, parent, false)
+        return TransactionHolder(view)
+    }
+
+    override fun getItemCount(): Int {
         return transactionList.size
     }
 
-    override fun getItem(position: Int): Any {
-        return transactionList[position]
-    }
+    override fun onBindViewHolder(holder: TransactionHolder, position: Int) {
+        val transactionAt = transactionList[position]
+        holder.date.text = transactionAt.date
+        holder.time.text = transactionAt.time
+        holder.total.text = transactionAt.totalPrice.toString()
+        holder.trUser.text = transactionAt.userId
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
-
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        var itemView = convertView
-        val holder: ViewHolder
-
-        if (itemView == null) {
-            itemView = LayoutInflater.from(context).inflate(R.layout.item_transaction, parent, false)
-            holder = ViewHolder()
-            holder.transactionName = itemView.findViewById(R.id.transactionNameTextView)
-            holder.description = itemView.findViewById(R.id.descriptionTextView)
-            holder.date = itemView.findViewById(R.id.dateTextView)
-            itemView.tag = holder
-        } else {
-            holder = itemView.tag as ViewHolder
+        holder.itemView.setOnClickListener{
+            onClick?.invoke(transactionAt)
         }
-
-        val transaction = getItem(position) as TransactionItem
-        holder.transactionName.text = transaction.id
-        holder.description.text = transaction.transactionId
-        holder.date.text = transaction.menuId
-
-        return itemView!!
-    }
-
-    private class ViewHolder {
-        lateinit var transactionName: TextView
-        lateinit var description: TextView
-        lateinit var date: TextView
     }
 }

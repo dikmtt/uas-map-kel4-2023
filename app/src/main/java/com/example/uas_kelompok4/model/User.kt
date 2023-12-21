@@ -10,6 +10,8 @@ data class User(
     var password: String,
     var role: String
 ): Parcelable {
+
+    constructor() : this("", "", "", "", "")
     constructor(parcel: Parcel) : this(
         parcel.readString()!!,
         parcel.readString()!!,
