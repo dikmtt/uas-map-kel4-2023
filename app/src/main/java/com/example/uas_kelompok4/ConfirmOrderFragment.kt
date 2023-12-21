@@ -130,7 +130,13 @@ class ConfirmOrderFragment : Fragment() {
         fbRef = FirebaseDatabase.getInstance().getReference("promo")
         listOfPromos = arrayListOf()
         promoNames = arrayListOf()
-        getPromos()
+        if(currUser != null) {
+            getPromos()
+        }
+        else {
+            listOfPromos.add(Promo("None", "None", 0.0, 0))
+            promoNames.add("None")
+        }
 
         return view
     }
@@ -249,7 +255,7 @@ class ConfirmOrderFragment : Fragment() {
                 promoNames.clear()
                 listOfPromos.add(Promo("None", "None", 0.0, 0))
                 promoNames.add("None")
-                if(snapshot.exists() && currUser != null) {
+                if(snapshot.exists()) {
                     for(promoSnap in snapshot.children) {
                         val promoIt = promoSnap.getValue(Promo::class.java)
                         listOfPromos.add(promoIt!!)
