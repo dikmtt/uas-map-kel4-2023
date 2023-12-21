@@ -31,9 +31,15 @@ class OrderActivity : AppCompatActivity(), MenuFragment.OrderItemClickListener, 
         val extras: Bundle? = intent.extras
         if(extras != null) {
             currUser = extras.getParcelable("currUser")
+            Log.d("currUser", currUser.toString())
         }
 
-        rvFrag = currUser?.let { MenuFragment.newInstance(it, "param2") }!!
+        rvFrag = MenuFragment()
+        if (currUser != null){
+            rvFrag = MenuFragment.newInstance(currUser!!,"param2")
+        }else{
+            rvFrag = rvFrag
+        }
         rvFrag.orderItemClickListener = this
         currFrag = rvFrag
         isInMenu = 1

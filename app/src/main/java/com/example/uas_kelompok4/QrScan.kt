@@ -56,7 +56,10 @@ class QrScan : AppCompatActivity() {
     private fun setResult(result: String) {
         if (result == "https://me-qr.com/riYpdt1j") {
             val intent = Intent(this, OrderActivity::class.java)
-            intent.putExtra("currUser", currUser)
+            if(currUser != null) {
+                intent.putExtra("currUser", currUser)
+                Log.d("currUser", currUser.toString())
+            }
             startActivity(intent)
             // Finish the current activity to prevent going back to the QR scan after navigating to OrderActivity
             finish()

@@ -55,6 +55,7 @@ class MenuFragment : Fragment() ,MenuItemAdapter.OnItemChangedListener {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
             currUser = it.getParcelable("currUser")
+            Log.d("currUser", currUser.toString())
         }
     }
 
@@ -237,24 +238,16 @@ class MenuFragment : Fragment() ,MenuItemAdapter.OnItemChangedListener {
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MenuFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(user: User, param2: String) =
+        fun newInstance(currUser: User, param2: String) =
             MenuFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelable("currUser", user)
+                    putParcelable("currUser", currUser)
                     putString(ARG_PARAM2, param2)
                 }
             }
     }
+
     interface OrderItemClickListener : MenuItemAdapter.OnItemChangedListener {
         fun onOrderItemsSelected(orderedMenu: List<MenuItem>)
     }

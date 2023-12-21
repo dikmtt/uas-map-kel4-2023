@@ -83,6 +83,7 @@ class ConfirmOrderFragment : Fragment() {
             totalPrice = it.getInt(TOTALPRICE, 0) // Use default value if not present
             orders = it.getParcelableArrayList(ORDER_LIST) ?: ArrayList()
             currUser= it.getParcelable("currUser")
+            Log.d("currUser", currUser.toString())
         }
         orderedMenu = orders
         totalMenu = totalItems
@@ -215,19 +216,23 @@ class ConfirmOrderFragment : Fragment() {
 
         val btn = view.findViewById<Button>(R.id.order_to_review_btn)
         btn.setOnClickListener {
-            AlertDialog.Builder(requireContext())
-                .setTitle("Confirmation")
-                .setMessage("Are you sure with your order? Make order or cancel.")
-                .setPositiveButton("Make Order") { _, _ ->
-                    // Process the order when the user clicks "Make Order"
-                    processOrder(selectedPromoPosition)
-                }
-                .setNegativeButton("No") { dialog, _ ->
-                    // Dismiss the dialog when the user clicks "No"
-                    dialog.dismiss()
-                }
-                .show()
+            processOrder(selectedPromoPosition)
+
         }
+//        btn.setOnClickListener {
+//            AlertDialog.Builder(requireContext())
+//                .setTitle("Confirmation")
+//                .setMessage("Are you sure with your order? Make order or cancel.")
+//                .setPositiveButton("Make Order") { _, _ ->
+//                    // Process the order when the user clicks "Make Order"
+//                    processOrder(selectedPromoPosition)
+//                }
+//                .setNegativeButton("No") { dialog, _ ->
+//                    // Dismiss the dialog when the user clicks "No"
+//                    dialog.dismiss()
+//                }
+//                .show()
+//        }
 
         cTotal.text = "Total:\t\t\t\t\t\t\t $totalPrice"
         dcTotal.text ="Discounted Total:\t\t\t\t\t\t\t $totalDiscPrice"
@@ -301,7 +306,7 @@ class ConfirmOrderFragment : Fragment() {
                 transactionMap["totalPrice"] = totalPrice
                 transactionMap["promoId"] = listOfPromos[selectedPromoPosition].id!! // Replace this with your actual promo ID if available
                 if(currUser != null) {
-                    transactionMap["userId"] = currUser!!.id // Replace this with the actual user ID
+                    transactionMap["userId"] = currUser!!.email // Replace this with the actual user ID
                 }
                 else {
                     transactionMap["userId"] = "Guest"
@@ -338,57 +343,44 @@ class ConfirmOrderFragment : Fragment() {
 
     private fun showNoItemsDialog() {
         activity?.let {
-            val alertDialogBuilder = AlertDialog.Builder(it)
-            alertDialogBuilder.setTitle("No Items to Order")
-            alertDialogBuilder.setMessage("There are no items in your order list.")
-
-            alertDialogBuilder.setPositiveButton("OK") { dialog, _ ->
-                dialog.dismiss()
-            }
-
-            val alertDialog = alertDialogBuilder.create()
-            alertDialog.show()
+            AlertDialog.Builder(it)
+                .setTitle("No Items to Order")
+                .setMessage("There are no items in your order list.")
+                .setPositiveButton("OK") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .create()
+                .show()
         }
     }
 
     private fun showSuccessDialog() {
-        if (!isAdded || context == null) {
-            Log.e("ConfirmOrderFragment", "Fragment is not attached to the activity or context is null")
-            return
-        }
-
         activity?.let {
-            val alertDialogBuilder = AlertDialog.Builder(it)
-            alertDialogBuilder.setTitle("Success")
-            alertDialogBuilder.setMessage("Transaction added successfully!")
-
-            alertDialogBuilder.setPositiveButton("OK") { _, _ ->
-                // Navigate back to the main menu or perform any necessary action
-                // Replace 'MainActivity' with your main menu activity
-                val intent = Intent(requireContext(), MainActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                startActivity(intent)
-                requireActivity().finish()
-            }
-
-            val alertDialog = alertDialogBuilder.create()
-            alertDialog.show()
+            AlertDialog.Builder(it)
+                .setTitle("Success")
+                .setMessage("Transaction added successfully!")
+                .setPositiveButton("OK") { _, _ ->
+                    val intent = Intent(requireContext(), MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                    requireActivity().finish()
+                }
+                .create()
+                .show()
         }
     }
+
 
     companion object {
         @JvmStatic
         fun newInstance(totalItems: Int, totalPrice: Int, orderList: ArrayList<MenuItem>, currUser: User?) =
             ConfirmOrderFragment().apply {
-                val fragment = ConfirmOrderFragment()
                 arguments = Bundle().apply {
                     putInt(TOTALITEMS, totalItems)
                     putInt(TOTALPRICE, totalPrice)
                     putParcelableArrayList(ORDER_LIST, orderList)
-                    putParcelable("USR2", currUser)
+                    putParcelable("currUser", currUser) // Ensure to pass currUser here
                 }
-                fragment.arguments = arguments
-                return fragment
             }
     }
 }
