@@ -11,7 +11,7 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="fragment_menu" />
+        android:text="" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/menu_rv_fr"

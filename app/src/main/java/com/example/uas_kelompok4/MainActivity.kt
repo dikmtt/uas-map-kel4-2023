@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -43,9 +42,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -56,7 +53,6 @@ import com.example.uas_kelompok4.model.User
 import com.example.uas_kelompok4.ui.theme.UAS_Kelompok4Theme
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -224,41 +220,41 @@ fun MainPage(navController: NavController) {
         {
             Text("Scan QR to start ordering!", modifier = Modifier.padding(8.dp))
 
-//           OutlinedButton(
-//                onClick = { navController.navigate("QrScan") },
-//                modifier = Modifier
-//                    .padding(8.dp)
-//                    .fillMaxWidth()
-//            ) {
-//                Icon(Icons.Default.ShoppingCart, contentDescription = null, tint = Color.Unspecified)
-//                Text("Scan QR")
-//            }
-//
-//            Text("Already became member?", modifier = Modifier.padding(8.dp))
-//
-//            OutlinedButton(
-//                onClick = { navController.navigate("Login") },
-//                modifier = Modifier
-//                    .padding(8.dp)
-//                    .fillMaxWidth()
-//            ) {
-//                Icon(Icons.Default.Lock, contentDescription = null, tint = Color.Unspecified)
-//                Text("Login")
-//            }
-//
-//            Text("Register for apply promo!", modifier = Modifier.padding(8.dp))
-//
-//            OutlinedButton(
-//                onClick = goToRegisterActivity,
-//                modifier = Modifier
-//                    .padding(8.dp)
-//                    .fillMaxWidth()
-//            ) {
-//                Icon(Icons.Default.Add, contentDescription = null, tint = Color.Unspecified)
-//                Text("Register")
-//            }
+          OutlinedButton(
+               onClick = { navController.navigate("QrScan") },
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
+            ) {
+                Icon(Icons.Default.ShoppingCart, contentDescription = null, tint = Color.Unspecified)
+               Text("Scan QR")
+           }
 
-            Button(
+            Text("Already became member?", modifier = Modifier.padding(8.dp))
+
+           OutlinedButton(
+                onClick = { navController.navigate("Login") },
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
+            ) {
+
+                Text("Login")
+            }
+
+            Text("Register for apply promo!", modifier = Modifier.padding(8.dp))
+
+            OutlinedButton(
+                onClick = goToRegisterActivity,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
+            ) {
+                Icon(Icons.Default.Add, contentDescription = null, tint = Color.Unspecified)
+                Text("Register")
+            }
+
+          /*  Button(
                 onClick = goToAddMenuActivity // Navigate to AddMenuActivity when button is clicked
             ) {
                 Text("Go to Add Menu")
@@ -290,7 +286,7 @@ fun MainPage(navController: NavController) {
 //
 //            ) {
 //                Text("test database")
-//            }
+//            }*/
         }
     }
 }
@@ -348,9 +344,15 @@ fun Login(
 }
 
 
-private fun startActivityForMember(navController: NavController) {
-    navController.navigate("QrScan")
+private fun startActivityForMember(context: Context, currUser: User) {
+    val intent = Intent(context, DashboardActivity::class.java)
+    intent.putExtra("currUser", currUser)
+    context.startActivity(intent)
 }
+
+/*private fun startActivityForMember(navController: NavController) {
+    navController.navigate("QrScan")
+}*/
 
 private fun startActivityForStaff(context: Context) {
     val intent = Intent(context, DashboardActivity::class.java)
@@ -400,6 +402,7 @@ private fun authenticateUserInRealtimeDatabase(context: Context, email: String, 
                         val role = userSnapshot.child("role").getValue(String::class.java)
                         if (!role.isNullOrBlank()) {
                             navigateBasedOnRole(context, navController, role)
+
                             Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
                         } else {
                             Toast.makeText(context, "User role not found.", Toast.LENGTH_SHORT).show()
@@ -422,7 +425,7 @@ private fun authenticateUserInRealtimeDatabase(context: Context, email: String, 
 
 private fun navigateBasedOnRole(context: Context, navController: NavController, role: String?) {
     when (role) {
-        "Member" -> startActivityForMember(navController)
+        "Member" -> startActivityForMember(context, currUser)
         "Staff" -> startActivityForStaff(context)
         "Admin" -> startActivityForAdmin(context)
         else -> {

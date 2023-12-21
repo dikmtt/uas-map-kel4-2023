@@ -6,7 +6,8 @@ import com.example.uas_kelompok4.model.User
 
 
 //CurrUser is based on the user currently logging in
-public var currUser: User = User("1", "Admin", "admin@resto.com", "ooofff", "Admin")
+//currUser role jangan di hardcode
+public var currUser: User = User("", "", "", "", "")
 //User("admin", "admin@resto.com", "admin", "Admin")
 class DashboardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,4 +31,6 @@ class DashboardActivity : AppCompatActivity() {
             ft.commit()
         }
     }
+
+
 }
