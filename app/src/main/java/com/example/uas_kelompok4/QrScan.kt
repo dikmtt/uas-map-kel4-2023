@@ -56,7 +56,7 @@ class QrScan : AppCompatActivity() {
     private fun setResult(result: String) {
         if (result == "https://me-qr.com/riYpdt1j") {
             val intent = Intent(this, OrderActivity::class.java)
-            intent.putExtra("USR2", currUser)
+            intent.putExtra("currUser", currUser)
             startActivity(intent)
             // Finish the current activity to prevent going back to the QR scan after navigating to OrderActivity
             finish()
@@ -70,13 +70,29 @@ class QrScan : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_qrscan)
+
         val extras: Bundle? = intent.extras
-        if(extras != null) {
-            currUser = extras.getParcelable("USR1")
+        if (extras != null) {
+            currUser = extras.getParcelable<User>("currUser")
+            Log.d("currUser", currUser.toString())
+
+            if (currUser != null) {
+                Log.d("currUser", currUser.toString()) // Add this line to check if currUser is retrieved properly
+                currUser?.id?.let {
+                    Log.d("currUser", it)
+                    Log.d("currUser", currUser.toString())
+                }
+            } else {
+                Log.d("currUser", "currUser is null")
+            }
+        } else {
+            Log.d("currUser", "Extras bundle is null")
         }
-        currUser?.id?.let { Log.d("currUser", it) }
+
         initViews()
     }
+
+
 
     private fun initViews() {
         findViewById<ImageButton>(R.id.qrbutton).setOnClickListener {

@@ -2,6 +2,7 @@ package com.example.uas_kelompok4
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,6 +43,7 @@ class DashboardFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_dashboard, container, false)
         val bund = arguments
         currUser = bund?.getParcelable<User>("user")!!
+        Log.d("currUser", currUser.toString())
         return view
     }
 

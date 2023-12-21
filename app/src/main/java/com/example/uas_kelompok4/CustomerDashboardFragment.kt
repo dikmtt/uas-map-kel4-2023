@@ -2,6 +2,7 @@ package com.example.uas_kelompok4
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,6 +43,7 @@ class CustomerDashboardFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_customer_dashboard, container, false)
         val bund = arguments
         currUser = bund?.getParcelable<User>("user")!!
+        Log.d("currUser", currUser.toString())
         return view
     }
 
@@ -50,8 +52,9 @@ class CustomerDashboardFragment : Fragment() {
         toScan = requireView().findViewById<View>(R.id.dshb_order)
         toScan.setOnClickListener {
             val i: Intent = Intent(activity, QrScan::class.java)
-            i.putExtra("USR1", currUser)
+            i.putExtra("currUser", currUser)
             startActivity(i)
+            Log.d("currUser", currUser.toString())
         }
     }
 

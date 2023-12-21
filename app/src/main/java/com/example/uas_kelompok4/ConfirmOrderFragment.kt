@@ -82,6 +82,7 @@ class ConfirmOrderFragment : Fragment() {
             totalItems = it.getInt(TOTALITEMS, 0) // Use default value if not present
             totalPrice = it.getInt(TOTALPRICE, 0) // Use default value if not present
             orders = it.getParcelableArrayList(ORDER_LIST) ?: ArrayList()
+            currUser= it.getParcelable("currUser")
         }
         orderedMenu = orders
         totalMenu = totalItems
@@ -91,6 +92,7 @@ class ConfirmOrderFragment : Fragment() {
         if(oa.currUser != null) {
             currUser = oa.currUser
         }
+        Log.d("currUser", "$currUser")
     }
 
     override fun onStart() {
@@ -376,13 +378,17 @@ class ConfirmOrderFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(totalItems: Int, totalPrice: Int, orderList: ArrayList<MenuItem>) =
+        fun newInstance(totalItems: Int, totalPrice: Int, orderList: ArrayList<MenuItem>, currUser: User?) =
             ConfirmOrderFragment().apply {
+                val fragment = ConfirmOrderFragment()
                 arguments = Bundle().apply {
                     putInt(TOTALITEMS, totalItems)
                     putInt(TOTALPRICE, totalPrice)
                     putParcelableArrayList(ORDER_LIST, orderList)
+                    putParcelable("USR2", currUser)
                 }
+                fragment.arguments = arguments
+                return fragment
             }
     }
 }

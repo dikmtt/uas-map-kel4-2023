@@ -154,7 +154,7 @@ class MenuFragment : Fragment() ,MenuItemAdapter.OnItemChangedListener {
             orderItemClickListener?.onOrderItemsSelected(orderedMenu)
             val ordersAL: ArrayList<MenuItem> = orders as ArrayList<MenuItem>
             //Put these objects to the ConfirmOrderFragments
-            val coFrag = ConfirmOrderFragment.newInstance(totalItem, totalPrice, ordersAL)
+            val coFrag = ConfirmOrderFragment.newInstance(totalItem, totalPrice, orders, currUser)
             val ft = activity?.supportFragmentManager?.beginTransaction()
             if (!coFrag.isAdded) {
                 ft?.replace(R.id.order_fragments, coFrag)

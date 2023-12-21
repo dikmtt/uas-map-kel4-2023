@@ -30,7 +30,7 @@ class OrderActivity : AppCompatActivity(), MenuFragment.OrderItemClickListener, 
 
         val extras: Bundle? = intent.extras
         if(extras != null) {
-            currUser = extras.getParcelable("USR2")
+            currUser = extras.getParcelable("currUser")
         }
 
         rvFrag = MenuFragment.newInstance("param1", "param2")
@@ -42,7 +42,7 @@ class OrderActivity : AppCompatActivity(), MenuFragment.OrderItemClickListener, 
         ft.replace(R.id.order_fragments, rvFrag)
         ft.commit()
 
-        coFrag = ConfirmOrderFragment.newInstance(totalItems, totalPrice, orders)
+        coFrag = ConfirmOrderFragment.newInstance(totalItems, totalPrice, orders, currUser)
         coFrag.setOrderProcessingListener(this)
 
         val btn = findViewById<Button>(R.id.order_to_review_btn)

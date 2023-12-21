@@ -255,39 +255,39 @@ fun MainPage(navController: NavController) {
                 Text("Register")
             }
 
-          /*  Button(
-                onClick = goToAddMenuActivity // Navigate to AddMenuActivity when button is clicked
-            ) {
-                Text("Go to Add Menu")
-            }
-            Button(
-                onClick = goToMenuFragment // Navigate to MenuFragment when button is clicked
-            ) {
-                Text("Go to Menu Fragment")
-            }
-            Button(
-                onClick = goToDashboardActivity
-
-            ) {
-                Text("Go to Dashboard Activity")
-            }
+//            Button(
+//                onClick = goToAddMenuActivity // Navigate to AddMenuActivity when button is clicked
+//            ) {
+//                Text("Go to Add Menu")
+//            }
+//            Button(
+//                onClick = goToMenuFragment // Navigate to MenuFragment when button is clicked
+//            ) {
+//                Text("Go to Menu Fragment")
+//            }
+//            Button(
+//                onClick = goToDashboardActivity
+//
+//            ) {
+//                Text("Go to Dashboard Activity")
+//            }
             Button(
                 onClick = goToOrderActivity
             ) {
                 Text("Go to Order Activity")
             }
-            Button(
-                onClick = goToAddPromoActivity
-            ) {
-                Text("Go to Add Promo Activity")
-            }
+//            Button(
+//                onClick = goToAddPromoActivity
+//            ) {
+//                Text("Go to Add Promo Activity")
+//            }
 
 //            Button(
 //                onClick = testDatabase
 //
 //            ) {
 //                Text("test database")
-//            }*/
+//            }
         }
     }
 }
