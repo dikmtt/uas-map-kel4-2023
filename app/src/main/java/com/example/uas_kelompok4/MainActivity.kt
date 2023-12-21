@@ -9,6 +9,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -180,7 +182,7 @@ fun MainPage(navController: NavController) {
                 text = stringResource(id = R.string.Logo_area),
                 style = TextStyle(
                     fontSize = 24.sp,
-                    // color = Color.Black
+
                 )
             )
 
@@ -188,7 +190,7 @@ fun MainPage(navController: NavController) {
                 text = stringResource(id = R.string.name_area),
                 style = TextStyle(
                     fontSize = 18.sp,
-                    // color = Color.Gray
+
                 )
             )
         }
@@ -214,7 +216,10 @@ fun MainPage(navController: NavController) {
                 .padding(16.dp),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        )
+        {
+            Text("Scan QR to start ordering!", modifier = Modifier.padding(8.dp))
+
            OutlinedButton(
                 onClick = { navController.navigate("QrScan") },
                 modifier = Modifier
@@ -224,6 +229,8 @@ fun MainPage(navController: NavController) {
                 Icon(Icons.Default.ShoppingCart, contentDescription = null, tint = Color.Unspecified)
                 Text("Scan QR")
             }
+
+            Text("Already became member?", modifier = Modifier.padding(8.dp))
 
             OutlinedButton(
                 onClick = { navController.navigate("Login") },
@@ -235,6 +242,8 @@ fun MainPage(navController: NavController) {
                 Text("Login")
             }
 
+            Text("Register for apply promo!", modifier = Modifier.padding(8.dp))
+
             OutlinedButton(
                 onClick = goToRegisterActivity,
                 modifier = Modifier
@@ -245,28 +254,27 @@ fun MainPage(navController: NavController) {
                 Text("Register")
             }
 
-            Button(
-                onClick = goToAddMenuActivity // Navigate to AddMenuActivity when button is clicked
-            ) {
-                Text("Go to Add Menu")
-            }
+//            Button(
+ //               onClick = goToAddMenuActivity // Navigate to AddMenuActivity when button is clicked
+ //           ) {
+ //               Text("Go to Add Menu")
+ //           }
 //            Button(
 //                onClick = goToMenuFragment // Navigate to MenuFragment when button is clicked
 //            ) {
 //                Text("Go to Menu Fragment")
 //            }
-            Button(
-                onClick = goToDashboardActivity
+//            Button(
+//                onClick = goToDashboardActivity
 
-            ) {
-                Text("Go to Dashboard Activity")
-            }
-            Button(
-                onClick = goToOrderActivity
-
-            ) {
-                Text("Go to Order Activity")
-            }
+ //           ) {
+  //              Text("Go to Dashboard Activity")
+  //          }
+ //           Button(
+ //               onClick = goToOrderActivity
+ //           ) {
+ //               Text("Go to Order Activity")
+ //           }
 //            Button(
 //                onClick = testDatabase
 //
@@ -418,8 +426,16 @@ fun PreviewLogin() {
 }*/
 
 @Composable
-fun Image(painter: Any, contentDescription: Nothing?, modifier: Any) {
+fun MyImage() {
+    val imagePainter: Painter = painterResource(id = R.mipmap.ic_banner)
 
+    Image(
+        painter = imagePainter,
+        contentDescription = "Main Page Image",
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
+    )
 }
 
 @Composable

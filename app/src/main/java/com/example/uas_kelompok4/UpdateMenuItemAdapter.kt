@@ -125,11 +125,9 @@ class UpdateMenuItemAdapter(
 
         val etName = dialogView.findViewById<EditText>(R.id.editTextName)
         val etPrice = dialogView.findViewById<EditText>(R.id.editTextPrice)
-        // Add other EditText fields to edit menu item details
 
         etName.setText(menuItem.name)
         etPrice.setText(menuItem.price.toString())
-        // Set other EditText fields with respective values
 
         val alertDialogBuilder = AlertDialog.Builder(context)
         alertDialogBuilder.setView(dialogView)
