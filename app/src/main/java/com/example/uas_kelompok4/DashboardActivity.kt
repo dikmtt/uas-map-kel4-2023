@@ -1,6 +1,8 @@
 package com.example.uas_kelompok4
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.uas_kelompok4.model.User
 
@@ -8,6 +10,7 @@ import com.example.uas_kelompok4.model.User
 //CurrUser is based on the user currently logging in
 //currUser role jangan di hardcode
 private lateinit var currUser: User
+private lateinit var logoutButton: View
 //User("admin", "admin@resto.com", "admin", "Admin")
 @Suppress("DEPRECATION")
 class DashboardActivity : AppCompatActivity() {
@@ -31,6 +34,11 @@ class DashboardActivity : AppCompatActivity() {
             dashb.arguments = bund
             ft.replace(R.id.dashboard_segment, dashb)
             ft.commit()
+        }
+        logoutButton = findViewById(R.id.logout_button)
+        logoutButton.setOnClickListener{
+            val intent = Intent(this, MainActivity::class.java)
+            this.startActivity(intent)
         }
     }
 
