@@ -339,15 +339,14 @@ private fun startActivityForMember(navController: NavController) {
 
 private fun startActivityForStaff(context: Context, user: User) {
     val intent = Intent(context, DashboardActivity::class.java)
-    //val bundle = Bundle()
-    //bundle.putParcelable("USER", user)
+    val bundle = Bundle()
+    bundle.putParcelable("USER", user)
     intent.putExtra("USER", user)
     context.startActivity(intent)
 }
 
 private fun startActivityForAdmin(context: Context, user: User) {
     val intent = Intent(context, DashboardActivity::class.java)
-    intent.putExtra("USER", user)
     context.startActivity(intent)
 }
 
@@ -388,8 +387,7 @@ private fun authenticateUserInRealtimeDatabase(context: Context, email: String, 
                     if (password == storedPassword) {
                         val role = userSnapshot.child("role").getValue(String::class.java)
                         if (!role.isNullOrBlank()) {
-                            val tUser = userSnapshot.getValue(User::class.java)!!
-                            navigateBasedOnRole(context, navController, role, tUser)
+                            navigateBasedOnRole(context, navController, role, userSnapshot.getValue(User::class.java)!!)
                             Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
                         } else {
                             Toast.makeText(context, "User role not found.", Toast.LENGTH_SHORT).show()

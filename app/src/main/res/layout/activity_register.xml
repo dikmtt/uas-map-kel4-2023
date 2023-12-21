@@ -8,6 +8,15 @@
     android:padding="16dp"
     tools:context=".RegisterActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Register Page"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingBottom="16dp"/>
+
     <EditText
         android:id="@+id/editTextName"
         android:layout_width="match_parent"
@@ -33,6 +42,8 @@
         android:id="@+id/buttonRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Register" />
+        android:text="Register"
+        android:textAllCaps="true"
+        android:textStyle="bold" />
 
 </LinearLayout>
