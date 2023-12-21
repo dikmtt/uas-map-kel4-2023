@@ -59,9 +59,11 @@ class ConfirmOrderFragment : Fragment() {
     private var promoPos : Int = 0
     private var totalItems : Int = 0
     private var totalPrice : Int = 0
+    private var totalDiscPrice : Int = 0
 
     private var totalMenu : Int = 0
     private var totalPrices : Int = 0
+    private var selectedPromoPosition: Int = 0
 
     private var orderProcessingListener: OrderProcessingListener? = null
 
@@ -82,6 +84,7 @@ class ConfirmOrderFragment : Fragment() {
         orderedMenu = orders
         totalMenu = totalItems
         totalPrices = totalPrice
+        totalDiscPrice = totalPrices
     }
 
     override fun onStart() {
@@ -129,6 +132,8 @@ class ConfirmOrderFragment : Fragment() {
         layManager = LinearLayoutManager(activity)
         val orderList = view.findViewById<RecyclerView>(R.id.order_table)
         val cTotal = view.findViewById<TextView>(R.id.confirmTotal)
+        val dcTotal = view.findViewById<TextView>(R.id.confirmDiscTotal)
+        val disc = view.findViewById<TextView>(R.id.discAmount)
         //val orders = mutableListOf<MenuItem>()
         orderList.apply {
             orderAdapter = OrderItemAdapter(orders)
@@ -142,27 +147,84 @@ class ConfirmOrderFragment : Fragment() {
             requireContext(), android.R.layout.simple_spinner_item, promoNames)
         promoList.adapter = promoAdapter
 
-        promoList.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+        promoList.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,
                 position: Int,
                 id: Long
             ) {
-                promoPos = position
+                if (position >= 0 && position < promoNames.size) {
+
+                    selectedPromoPosition = position
+                    val selectedPromo = promoNames[position]
+
+                    if(promoNames[position] == "None"){}
+                    else{
+                        val toastMessage = "$selectedPromo has been selected"
+                        Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT).show()
+                    }
+                    Log.d("totalItems", totalItems.toString())
+                    Log.d("listOfPromos[position].minPurchase",
+                        listOfPromos[position].minPurchase.toString()
+                    )
+
+                    if (listOfPromos[position].name != "None"||listOfPromos[position].discAmount != null || listOfPromos[position].discAmount != 0.0) {
+                        // Calculate the discounted price
+                        if(totalItems.toString().toInt() < listOfPromos[position].minPurchase.toString().toInt() || totalItems.toString().toInt() < listOfPromos[position].minPurchase.toString().toInt()&& listOfPromos[position].name != "None"){
+                            dcTotal.text = "Discounted Total:\t\t\t\t\t\t\t $totalPrices" // Update the text here as needed
+                            disc.text = "Discount Amount: \t\t\t\t\t\t\t $0%"
+                            val toastMessage = "Perlu membeli minimal " + listOfPromos[position].minPurchase.toString().toInt()
+                            Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT).show()
+                        }
+                        else {
+                            val discountAmount =
+                                totalPrices * (listOfPromos[position].discAmount!! / 100.0)
+                            val discString = listOfPromos[position].discAmount!!
+                            totalDiscPrice = totalPrices - discountAmount.toInt()
+
+                            // Update the TextView with the discounted total price
+                            dcTotal.text =
+                                "Discounted Total:\t\t\t\t\t\t\t $totalDiscPrice" // Update the text here as needed
+                            disc.text = "Discount Amount: \t\t\t\t\t\t\t $discString%"
+                        }
+                    } else {
+                        // Handle the case when the discAmount is null
+                        dcTotal.text = "Discounted Total:\t\t\t\t\t\t\t $totalPrices" // Update the text here as needed
+                        disc.text = "Discount Amount: \t\t\t\t\t\t\t $0%"
+                    }
+                }
+                else {
+                    Log.d("selectedPromo", "No selected promo or invalid position")
+                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("Not yet implemented")
+                // Handle case when nothing is selected (if needed)
             }
         }
 
 
         val btn = view.findViewById<Button>(R.id.order_to_review_btn)
         btn.setOnClickListener {
-            processOrder()
+            AlertDialog.Builder(requireContext())
+                .setTitle("Confirmation")
+                .setMessage("Are you sure with your order? Make order or cancel.")
+                .setPositiveButton("Make Order") { _, _ ->
+                    // Process the order when the user clicks "Make Order"
+                    processOrder(selectedPromoPosition)
+                }
+                .setNegativeButton("No") { dialog, _ ->
+                    // Dismiss the dialog when the user clicks "No"
+                    dialog.dismiss()
+                }
+                .show()
         }
-        cTotal.text = "Total:\t\t\t $totalPrice"
+
+        cTotal.text = "Total:\t\t\t\t\t\t\t $totalPrice"
+        dcTotal.text ="Discounted Total:\t\t\t\t\t\t\t $totalDiscPrice"
+        disc.text = "Discount Amount: \t\t\t\t\t\t\t $0%"
+
     }
 
     private fun getPromos() {
@@ -181,6 +243,7 @@ class ConfirmOrderFragment : Fragment() {
                         promoIt!!.name?.let { promoNames.add(it) }
                     }
                 }
+                updatePromoSpinner()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -188,13 +251,17 @@ class ConfirmOrderFragment : Fragment() {
             }
         })
     }
-    fun clickButton() {
-        processOrder()
+    private fun updatePromoSpinner() {
+        val promoAdapter: ArrayAdapter<String> = ArrayAdapter(
+            requireContext(), android.R.layout.simple_spinner_item, promoNames)
+        val promoList = view?.findViewById<Spinner>(R.id.promoList)
+        promoList?.adapter = promoAdapter
+        promoAdapter.notifyDataSetChanged()
     }
 
-
-
-    fun processOrder() {
+    fun processOrder(position : Int) {
+        val selectedPromo = listOfPromos[position]
+        Log.d("selectedPromo" , "$selectedPromo")
         var totalItem = 0
         var totalPrice = 0
         val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
@@ -208,15 +275,24 @@ class ConfirmOrderFragment : Fragment() {
             showNoItemsDialog()
         }else{
             if (orders.isNotEmpty()) {
+                if (selectedPromo != null && selectedPromo.minPurchase!! <= totalItem) {
+                    // Calculate the discount based on the discount amount of the selected promo
+                    val discountAmount = if (selectedPromo != null && selectedPromo.discAmount != null) {
+                        totalPrice * (selectedPromo.discAmount!! / 100.0)
+                    } else {
+                        0.0 // Or any default value if discAmount is null or selectedPromo is null
+                    }
+
+                    totalPrice -= discountAmount.toInt()
+                }
                 val transactionMap = HashMap<String, Any>()
                 transactionMap["date"] = currentDate
                 transactionMap["time"] = currentTime
                 transactionMap["orderedItems"] = orders
                 transactionMap["totalItem"] = totalItem
                 transactionMap["totalPrice"] = totalPrice
-                transactionMap["promoId"] = "promoId" // Replace this with your actual promo ID if available
+                transactionMap["promoId"] = listOfPromos[selectedPromoPosition].id!! // Replace this with your actual promo ID if available
                 transactionMap["userId"] = "userId" // Replace this with the actual user ID
-
                 // Get reference to Firebase database for transactions
                 fbRef1 = FirebaseDatabase.getInstance("https://uas-kelompok-4-5e25b-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("transactions")
                 val transactionKey = fbRef1.push().key

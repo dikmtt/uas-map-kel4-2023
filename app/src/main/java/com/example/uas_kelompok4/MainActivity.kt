@@ -148,6 +148,10 @@ fun MainPage(navController: NavController) {
         val intent = Intent(context, OrderActivity::class.java)
         startOrderActivity.launch(intent)
     }
+    val goToAddPromoActivity: () -> Unit = {
+        val intent = Intent(context, AddPromoActivity::class.java)
+        startOrderActivity.launch(intent)
+    }
     val goToMenuFragment: () -> Unit = {
         navController.navigate("MenuFragment")
     }
@@ -220,61 +224,67 @@ fun MainPage(navController: NavController) {
         {
             Text("Scan QR to start ordering!", modifier = Modifier.padding(8.dp))
 
-           OutlinedButton(
-                onClick = { navController.navigate("QrScan") },
-                modifier = Modifier
-                    .padding(8.dp)
-                    .fillMaxWidth()
-            ) {
-                Icon(Icons.Default.ShoppingCart, contentDescription = null, tint = Color.Unspecified)
-                Text("Scan QR")
-            }
-
-            Text("Already became member?", modifier = Modifier.padding(8.dp))
-
-            OutlinedButton(
-                onClick = { navController.navigate("Login") },
-                modifier = Modifier
-                    .padding(8.dp)
-                    .fillMaxWidth()
-            ) {
-                Icon(Icons.Default.Lock, contentDescription = null, tint = Color.Unspecified)
-                Text("Login")
-            }
-
-            Text("Register for apply promo!", modifier = Modifier.padding(8.dp))
-
-            OutlinedButton(
-                onClick = goToRegisterActivity,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .fillMaxWidth()
-            ) {
-                Icon(Icons.Default.Add, contentDescription = null, tint = Color.Unspecified)
-                Text("Register")
-            }
-
-//            Button(
- //               onClick = goToAddMenuActivity // Navigate to AddMenuActivity when button is clicked
- //           ) {
- //               Text("Go to Add Menu")
- //           }
-//            Button(
-//                onClick = goToMenuFragment // Navigate to MenuFragment when button is clicked
+//           OutlinedButton(
+//                onClick = { navController.navigate("QrScan") },
+//                modifier = Modifier
+//                    .padding(8.dp)
+//                    .fillMaxWidth()
 //            ) {
-//                Text("Go to Menu Fragment")
+//                Icon(Icons.Default.ShoppingCart, contentDescription = null, tint = Color.Unspecified)
+//                Text("Scan QR")
 //            }
-//            Button(
-//                onClick = goToDashboardActivity
+//
+//            Text("Already became member?", modifier = Modifier.padding(8.dp))
+//
+//            OutlinedButton(
+//                onClick = { navController.navigate("Login") },
+//                modifier = Modifier
+//                    .padding(8.dp)
+//                    .fillMaxWidth()
+//            ) {
+//                Icon(Icons.Default.Lock, contentDescription = null, tint = Color.Unspecified)
+//                Text("Login")
+//            }
+//
+//            Text("Register for apply promo!", modifier = Modifier.padding(8.dp))
+//
+//            OutlinedButton(
+//                onClick = goToRegisterActivity,
+//                modifier = Modifier
+//                    .padding(8.dp)
+//                    .fillMaxWidth()
+//            ) {
+//                Icon(Icons.Default.Add, contentDescription = null, tint = Color.Unspecified)
+//                Text("Register")
+//            }
 
- //           ) {
-  //              Text("Go to Dashboard Activity")
-  //          }
- //           Button(
- //               onClick = goToOrderActivity
- //           ) {
- //               Text("Go to Order Activity")
- //           }
+            Button(
+                onClick = goToAddMenuActivity // Navigate to AddMenuActivity when button is clicked
+            ) {
+                Text("Go to Add Menu")
+            }
+            Button(
+                onClick = goToMenuFragment // Navigate to MenuFragment when button is clicked
+            ) {
+                Text("Go to Menu Fragment")
+            }
+            Button(
+                onClick = goToDashboardActivity
+
+            ) {
+                Text("Go to Dashboard Activity")
+            }
+            Button(
+                onClick = goToOrderActivity
+            ) {
+                Text("Go to Order Activity")
+            }
+            Button(
+                onClick = goToAddPromoActivity
+            ) {
+                Text("Go to Add Promo Activity")
+            }
+
 //            Button(
 //                onClick = testDatabase
 //
