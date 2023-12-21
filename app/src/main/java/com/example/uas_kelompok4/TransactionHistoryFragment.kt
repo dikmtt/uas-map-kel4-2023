@@ -43,7 +43,7 @@ class TransactionHistoryFragment : Fragment() {
         transactionRV.apply {
             transactionAdapter = TransactionAdapter(listOfTransactions)
             layoutManager = layManager
-            setHasFixedSize(true)
+           // setHasFixedSize(true)
             adapter = transactionAdapter
 
             (transactionAdapter as TransactionAdapter).onClick = {

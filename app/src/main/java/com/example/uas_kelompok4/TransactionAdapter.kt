@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.uas_kelompok4.model.Transaction
 class TransactionAdapter(
-    private val transactionList: List<Transaction>
+     val transactionList: List<Transaction>
 ) : RecyclerView.Adapter<TransactionAdapter.TransactionHolder>() {
     var onClick : ((Transaction) -> Unit)? = null
 
