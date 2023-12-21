@@ -346,7 +346,7 @@ fun Login(
 
 private fun startActivityForMember(context: Context, currUser: User) {
     val intent = Intent(context, DashboardActivity::class.java)
-    intent.putExtra("currUser", currUser)
+    intent.putExtra("Member", currUser)
     context.startActivity(intent)
 }
 

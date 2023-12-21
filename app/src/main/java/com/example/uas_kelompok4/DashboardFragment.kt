@@ -22,6 +22,7 @@ class DashboardFragment : Fragment() {
     lateinit var addMenus: View
     lateinit var addPromos: View
     lateinit var updateMenus: View
+    lateinit var showTransaction: View
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +51,8 @@ class DashboardFragment : Fragment() {
         addMenus = requireView().findViewById<View>(R.id.add_menu)
         addPromos = requireView().findViewById<View>(R.id.add_promo)
         updateMenus = requireView().findViewById<View>(R.id.update_menu)
+        showTransaction = requireView().findViewById<View>(R.id.show_Transaction)
+
         if(currUser.role == "Admin") {
             addMenus.visibility = View.VISIBLE
             addPromos.visibility = View.VISIBLE
@@ -75,10 +78,15 @@ class DashboardFragment : Fragment() {
             val i: Intent = Intent(activity, UpdateMenusActivity::class.java)
             startActivity(i)
         }
+
+        showTransaction.setOnClickListener{
+            val i: Intent = Intent(activity, TransactionHistActivity::class.java)
+            startActivity(i)
+        }
+
     }
 
     companion object {
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             DashboardFragment().apply {
