@@ -9,10 +9,13 @@ public var currUser: User = User("1", "Admin", "admin@resto.com", "ooofff", "Adm
 //User("admin", "admin@resto.com", "admin", "Admin")
 
 //CurrUser is based on the user currently logging in
+@Suppress("DEPRECATION")
 class DashboardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
+        val intent = intent
+        currUser = intent.getParcelableExtra<User>("USER")!!
         val ft = supportFragmentManager.beginTransaction()
         if(currUser.role == "Member") {
             val dashb = CustomerDashboardFragment()

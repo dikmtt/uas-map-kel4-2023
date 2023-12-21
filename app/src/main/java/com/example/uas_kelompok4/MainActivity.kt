@@ -43,9 +43,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -56,7 +54,6 @@ import com.example.uas_kelompok4.model.User
 import com.example.uas_kelompok4.ui.theme.UAS_Kelompok4Theme
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -199,7 +196,7 @@ fun MainPage(navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Image(
-            painter = painterResource(id = R.drawable.ic_launcher_foreground),
+            painter = painterResource(id = R.drawable.tattinger_s_lounge),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
@@ -340,11 +337,15 @@ private fun startActivityForMember(navController: NavController) {
     navController.navigate("QrScan")
 }
 
-private fun startActivityForStaff(navController: NavController) {
-  //  navController.navigate("")
+private fun startActivityForStaff(context: Context, user: User) {
+    val intent = Intent(context, DashboardActivity::class.java)
+    val bundle = Bundle()
+    bundle.putParcelable("USER", user)
+    intent.putExtra("USER", user)
+    context.startActivity(intent)
 }
 
-private fun startActivityForAdmin(context: Context) {
+private fun startActivityForAdmin(context: Context, user: User) {
     val intent = Intent(context, DashboardActivity::class.java)
     context.startActivity(intent)
 }
@@ -386,13 +387,13 @@ private fun authenticateUserInRealtimeDatabase(context: Context, email: String, 
                     if (password == storedPassword) {
                         val role = userSnapshot.child("role").getValue(String::class.java)
                         if (!role.isNullOrBlank()) {
-                            navigateBasedOnRole(context, navController, role)
+                            navigateBasedOnRole(context, navController, role, userSnapshot.getValue(User::class.java)!!)
                             Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
                         } else {
                             Toast.makeText(context, "User role not found.", Toast.LENGTH_SHORT).show()
                         }
                     } else {
-                        Toast.makeText(context, "Incorrect password.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Incorrect credentials.", Toast.LENGTH_SHORT).show()
                     }
                     return
                 }
@@ -407,11 +408,13 @@ private fun authenticateUserInRealtimeDatabase(context: Context, email: String, 
     })
 }
 
-private fun navigateBasedOnRole(context: Context, navController: NavController, role: String?) {
+private fun navigateBasedOnRole(context: Context, navController: NavController, role: String?
+                                , user: User
+) {
     when (role) {
-        "member" -> startActivityForMember(navController)
-        "staff" -> startActivityForStaff(navController)
-        "admin" -> startActivityForAdmin(context)
+        "Member" -> startActivityForMember(navController)
+        "Staff" -> startActivityForStaff(context, user)
+        "Admin" -> startActivityForAdmin(context, user)
         else -> {
             Toast.makeText(context, "Invalid user role.", Toast.LENGTH_SHORT).show()
         }
