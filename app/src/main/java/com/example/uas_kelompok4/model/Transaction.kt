@@ -18,6 +18,8 @@ data class Transaction(
     var userId: String
 
 ): Parcelable {
+
+    constructor() : this("", "", listOf(), 0, "", 0, "")
     constructor(parcel: Parcel) : this(
         parcel.readString()!!,
         parcel.readString()!!,

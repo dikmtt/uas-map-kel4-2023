@@ -51,7 +51,7 @@ class DashboardFragment : Fragment() {
         addMenus = requireView().findViewById<View>(R.id.add_menu)
         addPromos = requireView().findViewById<View>(R.id.add_promo)
         updateMenus = requireView().findViewById<View>(R.id.update_menu)
-        showTransaction = requireView().findViewById<View>(R.id.show_Transaction)
+        showTransaction = requireView().findViewById<View>(R.id.show_transactions)
 
         if(currUser.role == "Admin") {
             addMenus.visibility = View.VISIBLE

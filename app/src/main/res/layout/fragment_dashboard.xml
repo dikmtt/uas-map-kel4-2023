@@ -32,7 +32,6 @@
             android:layout_margin="20dp"
             android:background="@color/cardview_dark_background" >
         <TextView
-            android:id="@+id/show_Transaction"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Show Transactions"
